@@ -3,6 +3,7 @@ local utils = require('utils')
 local tiles = require('tiles')
 local levels = require('levels')
 local entities = require('entities')
+local levelTransition = require('levelTransition')
 local textureAssets = textures.assets
 local whitePixel = textures.whitePixel or textures:newTexture('whitePixel', 1, 1):setPixel(0, 0, 1, 1, 1)
 time = 0
@@ -33,6 +34,7 @@ levelLight = nil
 cameraPos = vec(0, 0)
 oldCameraPos = vec(0, 0)
 local cameraZoom = 1
+local levelTime = 0
 
 local lightOffsets = {}
 for x = -8, 8 do
@@ -44,7 +46,7 @@ for x = -8, 8 do
    end
 end
 
-local function loadLevel(id)
+function loadLevel(id)
    local levelData = levels[id]
    cameraZoom = levelData.zoom or 1
 
@@ -53,6 +55,7 @@ local function loadLevel(id)
 
    levelTiles = {}
    levelDefaultTile = tiles[levelData.default]
+   levelTime = 0
 
    local x, y = 0, 0
    local level = levelData.world
@@ -91,9 +94,9 @@ local function loadLevel(id)
             end
             levelTiles[x][y] = tiles[' ']
          else
-            if tileData.light then table.insert(lightSources, vec(x, y)) end
             levelTiles[x][y] = tileData
          end
+         if tileData.light then table.insert(lightSources, vec(x, y)) end
       end
    end
    if loaded == id then return end
@@ -108,16 +111,20 @@ local function loadLevel(id)
    end
 end
 
-loadLevel('room')
+loadLevel(1)
 
 -- tick
 function events.tick()
    if gamePaused then return end
    time = time + 1
    oldCameraPos = cameraPos:copy()
+   levelTime = levelTime + 1
    for _, v in pairs(levelEntities) do
       v.oldPos = v.pos:copy()
       entities.tick(v)
+   end
+   if levels[loaded].tick then
+      levels[loaded].tick(levelTime)
    end
 end
 
@@ -154,7 +161,7 @@ function events.world_render(delta)
    worldModel:setScale(scale)
    -- background
    background:setPrimaryTexture('custom', levels[loaded].backgroundTexture or whitePixel, 16, 16)
-   background:color(levels[loaded].backgroundColor or whitePixel)
+   background:color(levels[loaded].backgroundColor or vec(0.1, 0.1, 0.1))
    local bgScale = windowSize.y / 16
    background:setPos(-windowSize.xy_ * 0.5)
    background:setScale(bgScale, bgScale)
@@ -181,4 +188,6 @@ function events.world_render(delta)
          for _, v in pairs(e.spriteVertices) do v.vertex:setUV((v.uv + uv) / 8) end
       end
    end
+   -- level transition
+   levelTransition(delta, camera, scale)
 end

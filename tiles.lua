@@ -2,7 +2,7 @@ return {
    [' '] = {uv = vec(0, 0), noCollision = true}, -- empty
    ['_'] = {uv = vec(0, 0), noCollision = true, light = true}, -- light
    ['P'] = {entity = 'player', physics = true, hitbox = vec(7, 7.9)}, -- player
-   ['T'] = {uv = vec(7, 0), noCollision = true, light = true, frames = 8, speed = 1}, -- tv
+   ['T'] = {uv = vec(6, 4), oneWay = true, light = true}, -- tv
    ['f'] = {uv = vec(0, 1)}, -- wood floor
    ['F'] = {uv = vec(0, 2)}, -- wood floor2
    ['d'] = {uv = vec(1, 1), oneWay = true}, -- drawer
@@ -16,4 +16,6 @@ return {
    ['c'] = {uv = vec(2, 3)}, -- ceiling
    ['C'] = {uv = vec(2, 4)}, -- ceiling 2
    ['5'] = {uv = vec(3, 3), noCollision = true}, -- painting
+   ['('] = {uv = vec(0, 3)}, -- dor1
+   [')'] = {uv = vec(0, 4)}, -- dor1
 }

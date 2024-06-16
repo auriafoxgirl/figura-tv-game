@@ -1,6 +1,7 @@
 local module = {}
 
 local input = require('input')
+local levels = require('levels')
 
 local jumpBuffer = 0
 local coyoteJump = 0
@@ -33,7 +34,8 @@ local function collision(pos, hitbox, ignoreOneWay, oldPos)
 end
 
 function module.tick(e)
-   if e.type == 'player' then
+   local isPlayer = e.type == 'player' and not levels[loaded].noInput
+   if isPlayer then
       jumpBuffer = math.max(jumpBuffer - 1, 0)
       coyoteJump = math.max(coyoteJump - 1, 0)
       jumpTime = math.max(jumpTime - 1, 0)
@@ -46,12 +48,12 @@ function module.tick(e)
    if e.tile.physics then
       local onGround = false
       -- up, down
-      if e.type == 'player' and jumpTime >= 1 then
+      if isPlayer and jumpTime >= 1 then
          e.vel.y = e.vel.y * 0.975 - 0.05
       else
          e.vel.y = e.vel.y * 0.95 - 0.1
       end
-      if e.type == 'player' and input.down:isPressed() and e.vel.y < 0 then
+      if isPlayer and input.down:isPressed() and e.vel.y < 0 then
          e.vel.y = e.vel.y - 0.05
       end
       e.pos.y = e.pos.y + e.vel.y
@@ -66,11 +68,11 @@ function module.tick(e)
                e.pos.y = e.pos.y - e.vel.y
             end
             end
-         if onGround and e.type == 'player' then
+         if onGround and isPlayer then
             coyoteJump = 3
          end
       end
-      if e.type == 'player' then
+      if isPlayer then
          if jumpBuffer >= 1 and coyoteJump >= 1 then
             e.vel.y = 0.6
             coyoteJump = 0
@@ -78,13 +80,13 @@ function module.tick(e)
          end
       end
       -- left right
-      if e.type == 'player' then
+      if isPlayer then
          local dir = (input.right:isPressed() and 1 or 0) - (input.left:isPressed() and 1 or 0)
-         if dir ~= 0 then
-            e.flip = dir < 0
-         end
          dir = dir * 0.25
          e.vel.x = e.vel.x + dir
+      end
+      if e.vel.x ~= 0 then
+         e.flip = e.vel.x < 0
       end
       e.vel.x = e.vel.x * (onGround and 0.6 or 0.65)
       e.pos.x = e.pos.x + e.vel.x
@@ -107,15 +109,19 @@ function module.tick(e)
 end
 
 function module.render(e)
+   if e.hide then return vec(0, 0), false end
    if e.tile.uv then
       return e.tile.uv, false
    end
    if e.type == 'player' then
       local uv = vec(6, 0)
-      if math.abs(e.vel.x) > 0.1 then
+      if math.abs(e.vel.x) > 0.04 then
          uv.y = uv.y + math.floor(e.moveTime * 1.5) % 4
       end
       return uv, e.flip
+   elseif e.type == 'tv' then
+      local uv = vec(7, 0)
+      return uv
    end
    return vec(0, 0), false
 end
