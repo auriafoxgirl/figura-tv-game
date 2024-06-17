@@ -2,24 +2,29 @@ local tiles = require('tiles')
 
 return {
 {
-   default = 'w',
+   defaultTile = 'w',
    zoom = 1.5,
    backgroundColor = vectors.hexToRGB('0069aa'),
-   -- noInput = true,
+   noInput = true,
+   tileset = vec(0, 0),
    world = [[
-ccccccccccccccccccccccccccccccc
-ccccccccccccccccccccccccccccccc
-ccccccccccccccccccccccccccccccc
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-wwwwwwwwwww         wwwwwwwwwww
-wwwwwwwwwww ___12_5 wwwwwwwwwww
-wwwwwwwwww( _T_34__ (wwwwwwwwww
-WWWWWWWWWW)P d  s   )WWWWWWWWWW
-fffffffffffffffffffffffffffffff
-FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+999999999wcccccccccwcccccccccccc
+999999999wcccccccccwcccccccccccc
+999999999wcccccccccwcccccccccccc
+999999999wcccccccccwcccccccccccc
+999999999wcccccccccwcccccccccccc
+999999999wcccccccccwcccccccccccc
+999999999wcccccccccwcccccccccccc
+999999999wCCCCCCCCCwCCCCCCCCCCCC
+999999999w         w____________
+999999999w ___12_5 w____________
+999999999( _T_34__ (____________
+888888888)P d  s   )____________
+777777777fffffffffffffffffffffff
+666666666FFFFFFFFFFFFFFFFFFFFFFF
+666666666FFFFFFFFFFFFFFFFFFFFFFF
+666666666FFFFFFFFFFFFFFFFFFFFFFF
+666666666FFFFFFFFFFFFFFFFFFFFFFF
 ]],
    tick = function(time)
       local player = levelEntities[1]
@@ -46,19 +51,19 @@ FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
          if time == 115 then
             player.vel.y = 0.6
          end
-      elseif time <= 210 then
-         if time == 125 or time == 140 or time == 180 then
+      elseif time <= 250 then
+         if time == 125 or time == 140 or time == 180 or time == 220 then
             player.vel = vec(0.05, 0.6)
          end
-      elseif time <= 220 then
+      elseif time <= 260 then
          player.vel.x = 0.15
-      elseif time == 230 then
+      elseif time == 270 then
          player.vel = vec(-0.6, 0.6)
-      elseif time == 240 then
+      elseif time == 280 then
         player.hide = true
         nextLevel()
       end
-      if time >= 90 and not (time >= 150 and time <= 160) and not (time >= 190 and time <= 200) then
+      if time >= 90 and not (time >= 150 and time <= 160) and not (time >= 190 and time <= 200) and not (time >= 230 and time <= 240) then
          tiles['T'].uv = vec(7, time % 8)
       else
          tiles['T'].uv = vec(6, 4 + math.clamp(math.floor((time - 40) * 0.25), 0, 3))
@@ -66,11 +71,20 @@ FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
    end
    },
 {
+   tileset = vec(0, 1),
+   backgroundTexture = textures.tvBg,
+   backgroundColor = vec(0.5, 0.5, 0.5),
+   defaultTile = 'F',
    world = [[
-wwwwwwwwwww ___12_5 wwwwwwwwwww
-wwwwwwwwww( _T_34__ (wwwwwwwwww
-WWWWWWWWWW)P d  s   )WWWWWWWWWW
-fffffffffffffffffffffffffffffff
+F     1     1     1   F
+F     _     _     _   F
+F     _     _     _   F
+F                     [
+F                     ]
+F                ffffff
+(          ff    FFFFFF
+)P    ff         FFFFFF
+ffffffFFfffffffffFFFFFF
 ]]
 }
 }

@@ -5,6 +5,8 @@ local levels = require('levels')
 local entities = require('entities')
 local levelTransition = require('levelTransition')
 local textureAssets = textures.assets
+local tilesetSize = vec(64, 64)
+local textureAssetsSize = textureAssets:getDimensions()
 local whitePixel = textures.whitePixel or textures:newTexture('whitePixel', 1, 1):setPixel(0, 0, 1, 1, 1)
 time = 0
 
@@ -18,7 +20,7 @@ end
 -- model
 local hud = models.model.Hud
 local worldModel = hud.world
-local entityModel = worldModel:newPart('entity'):setPos(0, 0, -1)
+local entityModel = nil
 local tilesModel = hud.world.tiles
 local emptyCube = models.model.emptyCube
 models.model:removeChild(emptyCube)
@@ -47,14 +49,17 @@ for x = -8, 8 do
 end
 
 function loadLevel(id)
+   local wasLoadedBefore = loaded == id
+   loaded = id
    local levelData = levels[id]
    cameraZoom = levelData.zoom or 1
 
-   entityModel:removeTask()
+   if entityModel then worldModel:removeChild(entityModel) end
+   entityModel = worldModel:newPart('entity'):setPos(0, 0, -1)
    levelEntities = {}
 
    levelTiles = {}
-   levelDefaultTile = tiles[levelData.default]
+   levelDefaultTile = tiles[levelData.defaultTile]
    levelTime = 0
 
    local x, y = 0, 0
@@ -70,14 +75,8 @@ function loadLevel(id)
          if not levelTiles[x] then levelTiles[x] = {} end
          local tileData = tiles[char] or {}
          if tileData.entity then
-            local sprite = entityModel:newSprite(x..'_'..y)
-               :texture(textureAssets, 8, 8)
-               :pos(-x * 8, y * -8)
-               :light(15, 15)
-            local spriteVertices = {}
-            for i, v in pairs(sprite:getVertices()) do
-               spriteVertices[i] = {vertex = v, uv = v:getUV()}
-            end
+            local sprite = emptyCube:copy(x..'_'..y)
+            entityModel:addChild(sprite)
             table.insert(levelEntities, {
                oldPos = vec(x, y),
                pos = vec(x, y),
@@ -86,7 +85,6 @@ function loadLevel(id)
                type = tileData.entity,
                tile = tileData,
                sprite = sprite,
-               spriteVertices = spriteVertices,
             })
             if tileData.entity == 'player' then
                cameraPos = vec(x, y) + 0.5
@@ -96,22 +94,22 @@ function loadLevel(id)
          else
             levelTiles[x][y] = tileData
          end
-         if tileData.light then table.insert(lightSources, vec(x, y)) end
+         if tileData.light then table.insert(lightSources, vec(x, y, tileData.light)) end
       end
    end
-   if loaded == id then return end
-   loaded = id
+   if wasLoadedBefore then return end
    levelLight = {}
    for _, lightPos in pairs(lightSources) do
+      -- local lPos, s = lightPos.xy, 
       for pos, l in pairs(lightOffsets) do
-         local p = lightPos + pos
+         local p = lightPos.xy + pos
          if not levelLight[p.x] then levelLight[p.x] = {} end
-         levelLight[p.x][p.y] = math.max(levelLight[p.x][p.y] or 0, l)
+         levelLight[p.x][p.y] = math.max(levelLight[p.x][p.y] or 0, l * lightPos.z)
       end
    end
 end
 
-loadLevel(1)
+loadLevel(2)
 
 -- tick
 function events.tick()
@@ -161,11 +159,15 @@ function events.world_render(delta)
    worldModel:setScale(scale)
    -- background
    background:setPrimaryTexture('custom', levels[loaded].backgroundTexture or whitePixel, 16, 16)
-   background:color(levels[loaded].backgroundColor or vec(0.1, 0.1, 0.1))
+   background:color(levels[loaded].backgroundColor or vec(1, 1, 1))
    local bgScale = windowSize.y / 16
    background:setPos(-windowSize.xy_ * 0.5)
    background:setScale(bgScale, bgScale)
+   local bgUvMat = matrices.mat3()
+   bgUvMat:scale(3, 1, 1):translate(camera.x * 0.01)
+   background:setUVMatrix(bgUvMat)
    -- tiles
+   local uvOffset = (levels[loaded].tileset or vec(0, 0)) * tilesetSize
    for _, sprite in pairs(tilesSprites) do
       local pos = sprite.pos + cameraFull
       local tile = levelTiles[pos.x] and levelTiles[pos.x][-pos.y] or levelDefaultTile
@@ -173,7 +175,7 @@ function events.world_render(delta)
       if tile and tile.frames then
          uv = uv + vec(0, math.floor(time * tile.speed) % tile.frames)
       end
-      sprite.sprite:setUV(uv / 8) -- * 8 / 64
+      sprite.sprite:setUVPixels(uv * 8 + uvOffset)
       local l = levelLight[pos.x] and levelLight[pos.x][-pos.y] or 0
       sprite.sprite:setColor(l, l, l)
    end
@@ -183,9 +185,13 @@ function events.world_render(delta)
       local pos = math.lerp(e.oldPos, e.pos, delta)
       e.sprite:setPos((cameraFull - pos.x_ + pos._y).xy_ * 8)
       if flip then
-         for _, v in pairs(e.spriteVertices) do v.vertex:setUV((1 - v.uv.x + uv.x) / 8, (v.uv.y + uv.y) / 8) end
+         local mat = matrices.mat3()
+         mat:scale(-1, 1, 1)
+         mat:translate(uv / textureAssetsSize * 8)
+         mat:translate(8 / textureAssetsSize.x, 0)
+         e.sprite:setUVMatrix(mat)
       else
-         for _, v in pairs(e.spriteVertices) do v.vertex:setUV((v.uv + uv) / 8) end
+         e.sprite:setUVPixels(uv * 8)
       end
    end
    -- level transition

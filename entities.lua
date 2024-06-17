@@ -74,9 +74,14 @@ function module.tick(e)
       end
       if isPlayer then
          if jumpBuffer >= 1 and coyoteJump >= 1 then
-            e.vel.y = 0.6
+            e.vel.y = 0.65
             coyoteJump = 0
-            jumpTime = 6
+            jumpTime = 4
+            if collision(e.pos + e.vel, e.tile.hitbox, true, e.pos) then
+               if not collision(vec(math.round(e.pos.x), e.pos.y) + e.vel, e.tile.hitbox, true, e.pos) then
+                  e.pos.x = math.round(e.pos.x)
+               end
+            end
          end
       end
       -- left right
@@ -104,6 +109,11 @@ function module.tick(e)
       if e.type == 'player' then
          cameraPos.x = math.lerp(cameraPos.x, e.pos.x + 0.5 + math.clamp(e.vel.x, -0.5, 0.5) * 6, 0.25)
          cameraPos.y = math.lerp(cameraPos.y, e.pos.y + 0.5, onGround and 0.4 or 0.2)
+         local pos = (e.pos + 0.5):floor()
+         local tile = levelTiles[pos.x] and levelTiles[pos.x][pos.y]
+         if tile and tile.code then
+            tile.code(e)
+         end
       end
    end
 end
