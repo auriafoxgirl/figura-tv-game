@@ -24,4 +24,5 @@ return {
    ['8'] = {uv = vec(1, 4), light = 1}, -- sky grass
    ['7'] = {uv = vec(1, 5)}, -- grass
    ['6'] = {uv = vec(1, 6)}, -- dirt
+   ['^'] = {uv = vec(5, 0), frames = 8, light = 1, speed = 0.5, damage = true, noCollision = true}, -- cable
 }

@@ -3,6 +3,7 @@ local levels = require('levels')
 local whitePixel = textures.whitePixel or textures:newTexture('whitePixel', 1, 1):setPixel(0, 0, 1, 1, 1)
 local levelTransition = -1
 local animPos = vec(0, 0)
+local targetLevel = nil
 model:pos(0, 0, -8):color(0, 0, 0)
 
 local sprites = {}
@@ -22,9 +23,19 @@ local function getAnimPos()
    end
 end
 
+function restartLevel()
+   if levelTransition < 0 then
+      levelTransition = 1
+      targetLevel = loaded
+      getAnimPos()
+      return true
+   end
+end
+
 function nextLevel()
    if levelTransition < 0 then
       levelTransition = 1
+      targetLevel = math.min(loaded + 1, #levels)
       getAnimPos()
    end
 end
@@ -32,10 +43,10 @@ end
 function events.tick()
    if levelTransition < 0 then return end
    levelTransition = levelTransition + 1
-   if levelTransition == 16 then
-      loadLevel(math.min(loaded + 1, #levels))
+   if levelTransition == 11 then
+      loadLevel(targetLevel)
       getAnimPos()
-   elseif levelTransition > 35 then
+   elseif levelTransition > 22 then
       levelTransition = -1
    end
 end
@@ -47,11 +58,11 @@ return function(delta, camera, worldScale)
    end
    local t = levelTransition + delta
    local scale = 1
-   if levelTransition < 16 then
-      scale = math.clamp(1 - t / 15, 0, 1)
+   if levelTransition < 11 then
+      scale = math.clamp(1 - t / 10, 0, 1)
       scale = 1 - (1 - scale) ^ 2
    else
-      scale = math.clamp((t - 20) / 15, 0, 1)
+      scale = math.clamp((t - 12) / 10, 0, 1)
       scale = scale ^ 2
    end
    model:visible(true)

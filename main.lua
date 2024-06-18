@@ -35,6 +35,7 @@ levelEntities = nil
 levelLight = nil
 cameraPos = vec(0, 0)
 oldCameraPos = vec(0, 0)
+levelSafeArea = vec(0, 0, 0, 0)
 local cameraZoom = 1
 local levelTime = 0
 
@@ -63,12 +64,14 @@ function loadLevel(id)
    levelTime = 0
 
    local x, y = 0, 0
+   local maxX = 0
    local level = levelData.world
    local lightSources = {}
    for i = 1, #level do
       local char = level:sub(i, i)
       if char == '\n' then
          y = y - 1
+         maxX = math.max(maxX, x)
          x = 0
       else
          x = x + 1
@@ -82,6 +85,7 @@ function loadLevel(id)
                pos = vec(x, y),
                vel = vec(0, 0),
                moveTime = 0,
+               wasOnGround = true,
                type = tileData.entity,
                tile = tileData,
                sprite = sprite,
@@ -94,9 +98,16 @@ function loadLevel(id)
          else
             levelTiles[x][y] = tileData
          end
-         if tileData.light then table.insert(lightSources, vec(x, y, tileData.light)) end
+         if tileData.light then table.insert(lightSources, vec(x, y, char == ' ' and levelData.light or tileData.light)) end
       end
    end
+   maxX = math.max(maxX, x)
+   levelSafeArea = vec(
+      -6,
+      y - 1,
+      maxX + 6,
+      4096
+   )
    if wasLoadedBefore then return end
    levelLight = {}
    for _, lightPos in pairs(lightSources) do
@@ -173,7 +184,9 @@ function events.world_render(delta)
       local tile = levelTiles[pos.x] and levelTiles[pos.x][-pos.y] or levelDefaultTile
       local uv = tile and tile.uv or vec(0, 0)
       if tile and tile.frames then
-         uv = uv + vec(0, math.floor(time * tile.speed) % tile.frames)
+         local speed = tile.speed or 1
+         local delay = tile.delay or 0
+         uv = uv + vec(0, math.max(math.floor(time * speed + pos.x * 9001 + pos.y * 9007, 0) % (tile.frames + delay) - delay, 0))
       end
       sprite.sprite:setUVPixels(uv * 8 + uvOffset)
       local l = levelLight[pos.x] and levelLight[pos.x][-pos.y] or 0

@@ -74,7 +74,7 @@ function module.tick(e)
       end
       if isPlayer then
          if jumpBuffer >= 1 and coyoteJump >= 1 then
-            e.vel.y = 0.65
+            e.vel.y = 0.55
             coyoteJump = 0
             jumpTime = 4
             if collision(e.pos + e.vel, e.tile.hitbox, true, e.pos) then
@@ -84,6 +84,10 @@ function module.tick(e)
             end
          end
       end
+      if onGround and not e.wasOnGround then
+         sounds['minecraft:block.stone.fall']:pos(player:getPos()):play()
+      end
+      e.wasOnGround = onGround
       -- left right
       if isPlayer then
          local dir = (input.right:isPressed() and 1 or 0) - (input.left:isPressed() and 1 or 0)
@@ -105,14 +109,31 @@ function module.tick(e)
             end
          end
       end
+      local oldMoveTime = e.moveTime
       e.moveTime = e.moveTime + math.abs(e.pos.x - e.oldPos.x)
       if e.type == 'player' then
+         -- step sound
+         if oldMoveTime % 2 < 1 and e.moveTime % 2 >= 1 and onGround then
+            sounds['minecraft:block.stone.step']:pos(player:getPos()):play()
+         end
+         -- camera 
          cameraPos.x = math.lerp(cameraPos.x, e.pos.x + 0.5 + math.clamp(e.vel.x, -0.5, 0.5) * 6, 0.25)
          cameraPos.y = math.lerp(cameraPos.y, e.pos.y + 0.5, onGround and 0.4 or 0.2)
          local pos = (e.pos + 0.5):floor()
+         -- tile
          local tile = levelTiles[pos.x] and levelTiles[pos.x][pos.y]
-         if tile and tile.code then
-            tile.code(e)
+         if tile then
+            if tile.damage then
+               if restartLevel() then
+                  sounds['minecraft:entity.player.hurt_freeze']:pos(player:getPos()):pitch(1.6):play()
+                  sounds['minecraft:entity.player.hurt_freeze']:pos(player:getPos()):pitch(1.2):play()
+               end
+            end
+            if tile.code then tile.code(e) end
+         end
+         -- in void
+         if not (pos > levelSafeArea.xy and pos < levelSafeArea.zw) then
+            restartLevel()
          end
       end
    end

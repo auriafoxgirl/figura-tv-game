@@ -74,17 +74,19 @@ return {
    tileset = vec(0, 1),
    backgroundTexture = textures.tvBg,
    backgroundColor = vec(0.5, 0.5, 0.5),
-   defaultTile = 'F',
+   light = 0.75,
+   defaultTile = ' ',
    world = [[
-F     1     1     1   F
-F     _     _     _   F
-F     _     _     _   F
-F                     [
-F                     ]
-F                ffffff
-(          ff    FFFFFF
-)P    ff         FFFFFF
-ffffffFFfffffffffFFFFFF
+                     
+                  [  
+  (               ]  
+  )P     ff     ffff 
+ fffff^^^^^^^fffFFFF 
+ FFFFFfffffffFFFFF   
+   FFFFFFFFFFFFFFF   
+     FFFFFFFFFFF     
+        FFFFF        
+                     
 ]]
 }
 }
