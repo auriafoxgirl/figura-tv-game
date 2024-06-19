@@ -1,10 +1,10 @@
-return {
+local tiles = {
    [' '] = {uv = vec(0, 0), noCollision = true, light = 0.25}, -- empty
    ['_'] = {uv = vec(0, 0), noCollision = true, light = 1}, -- light
    ['P'] = {entity = 'player', physics = true, hitbox = vec(7, 7.9)}, -- player
    ['T'] = {uv = vec(6, 4), oneWay = true, light = 1}, -- tv
-   ['f'] = {uv = vec(0, 1)}, -- wood floor
-   ['F'] = {uv = vec(0, 2)}, -- wood floor2
+   ['f'] = {uv = vec(0, 1)}, -- floor
+   ['F'] = {uv = vec(0, 2)}, -- floor2
    ['d'] = {uv = vec(1, 1), oneWay = true}, -- drawer
    ['s'] = {uv = vec(1, 2), noCollision = true}, -- sofa
    ['1'] = {uv = vec(3, 1), noCollision = true, light = 1}, -- window 1, lamp
@@ -25,4 +25,22 @@ return {
    ['7'] = {uv = vec(1, 5)}, -- grass
    ['6'] = {uv = vec(1, 6)}, -- dirt
    ['^'] = {uv = vec(5, 0), frames = 8, light = 1, speed = 0.5, damage = true, noCollision = true}, -- cable
+
+   ['q'] = {uv = vec(2, 5), light = 1, noCollision = true, key = 1}, -- key yellow
+   ['Q'] = {uv = vec(2, 6), light = 1}, -- key block locked yellow
+   ['Q key:1'] = {uv = vec(2, 7), light = 1, noCollision = true}, -- key block unlocked yellow
+
+   ['k'] = {uv = vec(3, 5), light = 1, noCollision = true, key = 2}, -- key blue
+   ['K'] = {uv = vec(3, 6), light = 1}, -- key block locked blue
+   ['K key:2'] = {uv = vec(3, 7), light = 1, noCollision = true}, -- key block unlocked blue
+
+   ['o'] = {uv = vec(4, 5), light = 1, noCollision = true, key = 3}, -- key red
+   ['O'] = {uv = vec(4, 6), light = 1}, -- key block locked red
+   ['O key:3'] = {uv = vec(4, 7), light = 1, noCollision = true}, -- key block unlocked red
 }
+
+for id, tile in pairs(tiles) do
+   tile.id = id
+end
+
+return tiles

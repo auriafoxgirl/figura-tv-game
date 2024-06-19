@@ -2,6 +2,7 @@ local module = {}
 
 local input = require('input')
 local levels = require('levels')
+local tiles = require('tiles')
 
 local jumpBuffer = 0
 local coyoteJump = 0
@@ -130,6 +131,17 @@ function module.tick(e)
                end
             end
             if tile.code then tile.code(e) end
+            if tile.key then
+               levelTiles[pos.x][pos.y] = tiles[' ']
+               for _, tilesX in pairs(levelTiles) do
+                  for y, t in pairs(tilesX) do
+                     local unlockedId = t.id..' key:'..tile.key
+                     if tiles[unlockedId] then
+                        tilesX[y] = tiles[unlockedId]
+                     end
+                  end
+               end
+            end
          end
          -- in void
          if not (pos > levelSafeArea.xy and pos < levelSafeArea.zw) then

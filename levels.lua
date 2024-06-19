@@ -2,11 +2,9 @@ local tiles = require('tiles')
 
 return {
 {
-   defaultTile = 'w',
+   theme = 'house',
    zoom = 1.5,
-   backgroundColor = vectors.hexToRGB('0069aa'),
    noInput = true,
-   tileset = vec(0, 0),
    world = [[
 999999999wcccccccccwcccccccccccc
 999999999wcccccccccwcccccccccccc
@@ -71,11 +69,7 @@ return {
    end
    },
 {
-   tileset = vec(0, 1),
-   backgroundTexture = textures.tvBg,
-   backgroundColor = vec(0.5, 0.5, 0.5),
-   light = 0.75,
-   defaultTile = ' ',
+   theme = 'tv',
    world = [[
                      
                   [  
@@ -87,6 +81,60 @@ return {
      FFFFFFFFFFF     
         FFFFF        
                      
+]]
+},
+{
+   theme = 'tv',
+   world = [[
+       [              
+       ]              
+      fff             
+            fff       
+  (               fff 
+  )P             fFFF 
+ fffff          fFFF  
+ FFFFF^^^^ff     FF   
+ FFFFFffffFF          
+  FFFFFFFFF           
+]]
+},
+{
+   theme = 'tv',
+   world = [[
+                   Q              
+        (          Q          [   
+ q      )P         Q          ]   
+fff   fffff   ffff Q ffff   fffff 
+       FFF     FF     FF     FFF  
+]]
+},
+{
+   theme = 'tv',
+   world = [[
+                 (  O  [ 
+ o q k          P)  O  ] 
+fffffff QQOOKK ffff   fff
+ FFFFF          FF       
+  FFF                    
+]]
+},
+{
+   theme = 'tv',
+   world = [[
+    f                                
+    F      k                         
+    F     fff                        
+    F K                              
+    F KK                             
+    F  KK                            
+    F   KK                           
+    F       KKK             (   O  [ 
+    F^^^^^^^f f   KKK       )P  O  ] 
+    F       F F^^^^^^^^^fOOOfff   fff
+                 Q         fFFF      
+                 Q        fFFF       
+ q               Q     o fFFFF       
+fff   OOO   fff  OOOO  ffFFFF        
 ]]
 }
 }

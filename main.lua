@@ -2,6 +2,7 @@
 local utils = require('utils')
 local tiles = require('tiles')
 local levels = require('levels')
+local levelThemes = require('levelThemes')
 local entities = require('entities')
 local levelTransition = require('levelTransition')
 local textureAssets = textures.assets
@@ -36,6 +37,7 @@ levelLight = nil
 cameraPos = vec(0, 0)
 oldCameraPos = vec(0, 0)
 levelSafeArea = vec(0, 0, 0, 0)
+levelTheme = nil
 local cameraZoom = 1
 local levelTime = 0
 
@@ -53,6 +55,7 @@ function loadLevel(id)
    local wasLoadedBefore = loaded == id
    loaded = id
    local levelData = levels[id]
+   levelTheme = levelThemes[levelData.theme] or levelThemes.house
    cameraZoom = levelData.zoom or 1
 
    if entityModel then worldModel:removeChild(entityModel) end
@@ -60,7 +63,7 @@ function loadLevel(id)
    levelEntities = {}
 
    levelTiles = {}
-   levelDefaultTile = tiles[levelData.defaultTile]
+   levelDefaultTile = tiles[levelTheme.defaultTile]
    levelTime = 0
 
    local x, y = 0, 0
@@ -98,7 +101,7 @@ function loadLevel(id)
          else
             levelTiles[x][y] = tileData
          end
-         if tileData.light then table.insert(lightSources, vec(x, y, char == ' ' and levelData.light or tileData.light)) end
+         if tileData.light then table.insert(lightSources, vec(x, y, char == ' ' and levelTheme.light or tileData.light)) end
       end
    end
    maxX = math.max(maxX, x)
@@ -120,7 +123,7 @@ function loadLevel(id)
    end
 end
 
-loadLevel(2)
+loadLevel(5)
 
 -- tick
 function events.tick()
@@ -169,8 +172,8 @@ function events.world_render(delta)
    worldModel:setPos(cameraOffset.xy_ * 8 * scale - windowSize.xy_ * 0.5)
    worldModel:setScale(scale)
    -- background
-   background:setPrimaryTexture('custom', levels[loaded].backgroundTexture or whitePixel, 16, 16)
-   background:color(levels[loaded].backgroundColor or vec(1, 1, 1))
+   background:setPrimaryTexture('custom', levelTheme.backgroundTexture or whitePixel, 16, 16)
+   background:color(levelTheme.backgroundColor or vec(1, 1, 1))
    local bgScale = windowSize.y / 16
    background:setPos(-windowSize.xy_ * 0.5)
    background:setScale(bgScale, bgScale)
@@ -178,7 +181,7 @@ function events.world_render(delta)
    bgUvMat:scale(3, 1, 1):translate(camera.x * 0.01)
    background:setUVMatrix(bgUvMat)
    -- tiles
-   local uvOffset = (levels[loaded].tileset or vec(0, 0)) * tilesetSize
+   local uvOffset = (levelTheme.tileset or vec(0, 0)) * tilesetSize
    for _, sprite in pairs(tilesSprites) do
       local pos = sprite.pos + cameraFull
       local tile = levelTiles[pos.x] and levelTiles[pos.x][-pos.y] or levelDefaultTile
@@ -186,7 +189,7 @@ function events.world_render(delta)
       if tile and tile.frames then
          local speed = tile.speed or 1
          local delay = tile.delay or 0
-         uv = uv + vec(0, math.max(math.floor(time * speed + pos.x * 9001 + pos.y * 9007, 0) % (tile.frames + delay) - delay, 0))
+         uv = uv + vec(0, math.max(math.floor(time * speed + pos.x, 0) % (tile.frames + delay) - delay, 0))
       end
       sprite.sprite:setUVPixels(uv * 8 + uvOffset)
       local l = levelLight[pos.x] and levelLight[pos.x][-pos.y] or 0
