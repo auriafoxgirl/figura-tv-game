@@ -13,13 +13,14 @@ time = 0
 
 -- pause game
 gamePaused = false
-keybinds:newKeybind('pause', 'key.keyboard.o').press = function()
+keybinds:newKeybind('hide game', 'key.keyboard.o').press = function()
    gamePaused = not gamePaused
-   if gamePaused then print('press O to unpause') end
+   if gamePaused then print('press O to show game') end
 end
 
 -- model
 local hud = models.model.Hud
+hud:setVisible(false)
 local worldModel = hud.world
 local entityModel = nil
 local tilesModel = hud.world.tiles
@@ -161,7 +162,7 @@ function events.world_render(delta)
       return
    end
    hud:setVisible(true)
-   renderer:setRenderHUD(false)
+   -- renderer:setRenderHUD(false)
    local windowSize = client.getScaledWindowSize()
    local camera = math.lerp(oldCameraPos, cameraPos, delta)
    local cameraFull = camera:copy():floor()
