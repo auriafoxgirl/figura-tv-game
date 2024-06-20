@@ -1,5 +1,6 @@
 local gnui = require("libraries.gnui")
 local levels = require('levels')
+local progress = require('progress')
 
 -- mouse
 local updateMouse = false
@@ -79,8 +80,11 @@ do
    screen:addChild(
       createButton('play', vec(128, 18), vec(8, -11),
       function()
-         -- nextLevel()
-         setUIScreen('levels')
+         if progress.getProgress() == 0 then
+            setLevel(2)
+         else
+            setUIScreen('levels')
+         end
       end
    ):setAnchor(0, 0.5))
    screen:addChild(
@@ -98,15 +102,22 @@ do
       if levelScreen then screen:removeChild(levelScreen) end
       levelScreen = gnui:newContainer():setAnchor(0, 0.5, 1, 1.5)
       screen:addChild(levelScreen)
-      local x, y = 0, 0
-      for i = 2, #levels do
+      levelScreen:addChild(
+         createButton('prologue', vec(118, 18), vec(0, 4),
+         function()
+            setLevel(2)
+         end
+      ))
+      local x, y = 0, 1
+      local maxLevel = progress.getProgress()
+      for i = 3, #levels do
          if x >= 5 then
             x = 0
             y = y + 1
          end
-         local isLocked = i > 4 -- change this later
+         local isLocked = i > maxLevel -- change this later
          levelScreen:addChild(
-            createButton(tostring(i - 1), vec(22, 22), vec(x * 24, y * 24),
+            createButton(tostring(i - 2), vec(22, 22), vec(x * 24, y * 24),
             function()
                setLevel(i)
             end,
@@ -118,7 +129,7 @@ do
          x = x + 1
       end
       levelScreen:addChild(
-         createButton('back', vec(118, 18), vec(0, (y + 1) * 24),
+         createButton('back', vec(118, 18), vec(0, (y + 1) * 24 + 2),
          function()
             setUIScreen('mainMenu')
          end
