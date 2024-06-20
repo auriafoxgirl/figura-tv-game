@@ -208,5 +208,7 @@ events.WORLD_RENDER:register(function(delta)
 end)
 
 events.MOUSE_MOVE:register(function()
+   if gamePaused then return end
    updateMouse = true
+   return true
 end)
