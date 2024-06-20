@@ -28,15 +28,14 @@ local function getAnimPos()
    end
 end
 
-function restartLevel()
+function setLevel(level)
    if levelTransition < 0 then
       levelTransition = 1
-      targetLevel = loaded
+      targetLevel = level or loaded
       getAnimPos()
       return true
    end
 end
-
 function nextLevel()
    if levelTransition < 0 then
       levelTransition = 1

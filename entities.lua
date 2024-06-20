@@ -125,7 +125,7 @@ function module.tick(e)
          local tile = levelTiles[pos.x] and levelTiles[pos.x][pos.y]
          if tile then
             if tile.damage then
-               if restartLevel() then
+               if setLevel() then
                   sounds['minecraft:entity.player.hurt_freeze']:pos(player:getPos()):pitch(1.6):play()
                   sounds['minecraft:entity.player.hurt_freeze']:pos(player:getPos()):pitch(1.2):play()
                end
@@ -145,7 +145,7 @@ function module.tick(e)
          end
          -- in void
          if not (pos > levelSafeArea.xy and pos < levelSafeArea.zw) then
-            restartLevel()
+            setLevel()
          end
       end
    end
