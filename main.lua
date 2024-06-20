@@ -13,9 +13,13 @@ time = 0
 
 -- pause game
 gamePaused = false
-keybinds:newKeybind('hide game', 'key.keyboard.o').press = function()
+keybinds:fromVanilla('figura.config.action_wheel_button').press = function()
    gamePaused = not gamePaused
-   if gamePaused then print('press O to show game') end
+   if gamePaused then
+      local key = keybinds:getVanillaKey('figura.config.action_wheel_button'):gsub('^key%.keyboard%.', '')
+      print('press '..key..' to show game')
+   end
+   return true
 end
 
 -- model
@@ -182,6 +186,7 @@ function events.world_render(delta)
    local bgUvMat = matrices.mat3()
    bgUvMat:scale(3, 1, 1):translate(camera.x * 0.01)
    background:setUVMatrix(bgUvMat)
+   background:setVisible(false)
    -- tiles
    local uvOffset = (levelTheme.tileset or vec(0, 0)) * tilesetSize
    for _, sprite in pairs(tilesSprites) do
