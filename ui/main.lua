@@ -60,8 +60,8 @@ local function createButton(text, size, pos, func)
       end
    end)
    button.MOUSE_EXITED:register(function()
-      updateButton()
       if clickedElement == button then clickedElement = nil end
+      updateButton()
    end)
    button.CURSOR_CHANGED:register(function()
       updateButton()
@@ -70,15 +70,55 @@ local function createButton(text, size, pos, func)
 end
 
 do
-   local screen = gnui.newContainer()
-   screen:setAnchor(0, 0, 1, 1)
-   screen:addChild(createButton('hello', vec(0, 0, 128, 18), vec(8, 0)):setAnchor(0, 0.5))
-   
+   local screen = gnui:newContainer():setAnchor(0, 0, 1, 1)
    screens.mainMenu = screen
+   screen:addChild(
+      createButton('play', vec(0, 0, 128, 18), vec(8, -11),
+      function()
+         print('play')
+         nextLevel()
+      end
+   ):setAnchor(0, 0.5))
+   screen:addChild(
+      createButton('info', vec(0, 0, 128, 18), vec(8, 11),
+      function()
+         setUIScreen('info')
+      end
+   ):setAnchor(0, 0.5))
+end
+
+do
+   local screen = gnui:newContainer():setAnchor(0, 0, 1, 1)
+   screens.levels = screen
+end
+
+do
+   local screen = gnui:newContainer():setAnchor(0, 0, 1, 1)
+   screens.info = screen
+   local textBox = gnui:newContainer()
+   screen:addChild(textBox)
+   local sprite = gnui.newSprite()
+   sprite:setTexture(textures.ui)
+         :setBorderThickness(2, 2, 2, 2)
+         :setUV(1, 7, 5, 11)
+         :setScale(2)
+   textBox:setSprite(sprite)
+          :setAnchor(0, 0.5)
+          :setDimensions(8, -72, 142, 32)
+   local label = gnui.newLabel()
+   textBox:addChild(label)
+   label:setDimensions(4, 4)
+        :setText('Fix the tv static!\nPlatformer 2d game made\nin figura where you try\nto fix the tv static\n\nMade for avatar contest\n\nMade by:\nAuriafoxgirl\n\nLibraries:\nGNUI - GNamimates')
+        screen:addChild(
+         createButton('back', vec(0, 0, 134, 18), vec(8, 36),
+         function()
+            setUIScreen('mainMenu')
+         end
+      ):setAnchor(0, 0.5))
 end
 
 -- magic
-local screen = gnui.newContainer()
+local screen = gnui:newContainer()
 local uiModelPart = models.model.Hud:newPart('ui')
 uiModelPart:setPos(0, 0, -4)
 uiModelPart:addChild(screen.ModelPart)
@@ -102,7 +142,7 @@ end
 setUIScreen('mainMenu')
 
 local screen_size = vectors.vec2(0,0)
-events.TICK:register(function (delta)
+events.WORLD_RENDER:register(function(delta)
    if gamePaused or not uiScreen then
       updateMouse = true
       host:setUnlockCursor(false)

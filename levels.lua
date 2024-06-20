@@ -1,9 +1,38 @@
 local tiles = require('tiles')
 
 return {
+   {
+   theme = 'house',
+   zoom = 2,
+   noInput = true,
+   cameraOffset = vec(-2, 7/8),
+   transitionOffset = vec(-2, 7/8),
+   world = [[
+999999999wcccccccccwcccccccccccc
+999999999wcccccccccwcccccccccccc
+999999999wcccccccccwcccccccccccc
+999999999wcccccccccwcccccccccccc
+999999999wcccccccccwcccccccccccc
+999999999wcccccccccwcccccccccccc
+999999999wcccccccccwcccccccccccc
+999999999wCCCCCCCCCwCCCCCCCCCCCC
+999999999w         w____________
+999999999w ___12_5 w____________
+999999999( _t_34__ (____________
+888888888)  d Ps   )____________
+777777777fffffffffffffffffffffff
+666666666FFFFFFFFFFFFFFFFFFFFFFF
+666666666FFFFFFFFFFFFFFFFFFFFFFF
+666666666FFFFFFFFFFFFFFFFFFFFFFF
+666666666FFFFFFFFFFFFFFFFFFFFFFF
+]],
+   tick = function()
+      levelEntities[1].hide = true
+   end
+   },
 {
    theme = 'house',
-   zoom = 1.5,
+   zoom = 2,
    noInput = true,
    world = [[
 999999999wcccccccccwcccccccccccc

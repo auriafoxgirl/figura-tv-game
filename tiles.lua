@@ -3,6 +3,7 @@ local tiles = {
    ['_'] = {uv = vec(0, 0), noCollision = true, light = 1}, -- light
    ['P'] = {entity = 'player', physics = true, hitbox = vec(7, 7.9)}, -- player
    ['T'] = {uv = vec(6, 4), oneWay = true, light = 1}, -- tv
+   ['t'] = {uv = vec(7, 0), frames = 8, oneWay = true, light = 1}, -- static tv
    ['f'] = {uv = vec(0, 1)}, -- floor
    ['F'] = {uv = vec(0, 2)}, -- floor2
    ['d'] = {uv = vec(1, 1), oneWay = true}, -- drawer

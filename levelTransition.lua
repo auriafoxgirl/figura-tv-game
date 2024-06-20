@@ -18,8 +18,13 @@ local function getAnimPos()
       if v.type == 'player' then
          animPos = v.pos + 0.5
          animPos.y = -animPos.y
-         return
+         break
       end
+   end
+   local transitionOffset = levels[loaded].transitionOffset
+   if transitionOffset then
+      animPos.x = animPos.x + transitionOffset.x
+      animPos.y = animPos.y - transitionOffset.y
    end
 end
 
@@ -46,6 +51,7 @@ function events.tick()
    if levelTransition == 11 then
       loadLevel(targetLevel)
       getAnimPos()
+      setUIScreen()
    elseif levelTransition > 22 then
       levelTransition = -1
    end

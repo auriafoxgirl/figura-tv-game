@@ -124,7 +124,7 @@ function loadLevel(id)
    end
 end
 
-loadLevel(5)
+loadLevel(1)
 
 -- tick
 function events.tick()
@@ -165,6 +165,7 @@ function events.world_render(delta)
    -- renderer:setRenderHUD(false)
    local windowSize = client.getScaledWindowSize()
    local camera = math.lerp(oldCameraPos, cameraPos, delta)
+   camera = camera + (levels[loaded].cameraOffset or vec(0, 0))
    local cameraFull = camera:copy():floor()
    local cameraOffset = vec(camera.x % 1, 1 - camera.y % 1)
    camera.y = -camera.y
