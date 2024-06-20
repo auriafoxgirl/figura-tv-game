@@ -186,7 +186,6 @@ function events.world_render(delta)
    local bgUvMat = matrices.mat3()
    bgUvMat:scale(3, 1, 1):translate(camera.x * 0.01)
    background:setUVMatrix(bgUvMat)
-   background:setVisible(false)
    -- tiles
    local uvOffset = (levelTheme.tileset or vec(0, 0)) * tilesetSize
    for _, sprite in pairs(tilesSprites) do
