@@ -18,8 +18,8 @@ pause.press = function()
    if gameHidden then return end
    if host:getScreen() then return end
    if uiScreen then return end
-   gamePaused = not gamePaused
-   setUIScreen(gamePaused and 'pause')
+   gamePaused = true
+   setUIScreen('pause')
    return true
 end
 
