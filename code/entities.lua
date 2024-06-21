@@ -3,6 +3,7 @@ local module = {}
 local input = require('code.input')
 local levels = require('code.levels')
 local tiles = require('code.tiles')
+local gameParticles = require('code.particles')
 
 local jumpBuffer = 0
 local coyoteJump = 0
@@ -84,10 +85,32 @@ function module.tick(e)
                   e.pos.x = math.round(e.pos.x)
                end
             end
+            for _ = 1, 16 do
+               local offset = math.random() - 0.5
+               gameParticles.spawn(
+                  math.random(5, 10),
+                  e.pos + vec(0.5 + offset * 0.5, -1),
+                  vec(offset * 0.05, math.random() * 0.1 + 0.05),
+                  0,
+                  vec(1, 1, 1) * (math.random() * 0.4 + 0.6),
+                  vec(0.5, 0.5, 0.5)
+               )
+            end
          end
       end
       if onGround and not e.wasOnGround then
          sounds['minecraft:block.stone.fall']:pos(player:getPos()):play()
+         for _ = 1, 16 do
+            local offset = math.random() - 0.5
+            gameParticles.spawn(
+               math.random(5, 10),
+               e.pos + vec(0.5 + offset * 0.5, -1),
+               vec(offset * 0.15, math.random() * 0.04 + 0.04),
+               0.01,
+               vec(1, 1, 1) * (math.random() * 0.5 + 0.5),
+               vec(0.4, 0.4, 0.4)
+            )
+         end
       end
       e.wasOnGround = onGround
       -- left right
@@ -115,6 +138,17 @@ function module.tick(e)
       local oldMoveTime = e.moveTime
       e.moveTime = e.moveTime + math.abs(e.pos.x - e.oldPos.x)
       if e.type == 'player' then
+         -- particles
+         if onGround and math.abs(e.vel.x) > 0.2 and oldMoveTime % 1 < 0.5 and e.moveTime % 1 >= 0.5 then
+            gameParticles.spawn(
+               math.random(5, 8),
+               e.pos + vec(0.25 + math.random() * 0.5, -1),
+               vec(-e.vel.x * 0.5, 0.1 + math.random() * 0.1),
+               0.05,
+               vec(1, 1, 1) * (math.random() * 0.2 + 0.8),
+               vec(0.5, 0.5, 0.5)
+            )
+         end
          -- step sound
          if oldMoveTime % 2 < 1 and e.moveTime % 2 >= 1 and onGround then
             sounds['minecraft:block.stone.step']:pos(player:getPos()):play()

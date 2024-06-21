@@ -1,8 +1,10 @@
 -- libraries and stuff
 local tiles = require('code.tiles')
 local levels = require('code.levels')
+local gameParticles = require('code.particles')
 local levelThemes = require('code.levelThemes')
 local entities = require('code.entities')
+local utils = require('code.utils')
 local levelTransition = require('code.levelTransition')
 local textureAssets = textures.assets
 local tilesetSize = vec(64, 64)
@@ -28,9 +30,6 @@ hud:setVisible(false)
 local worldModel = hud.world
 local entityModel = nil
 local tilesModel = hud.world.tiles
-local emptyCube = models.model.emptyCube
-models.model:removeChild(emptyCube)
-emptyCube:light(15, 15)
 local background = hud.background
 
 -- level
@@ -71,6 +70,8 @@ function loadLevel(id)
    levelDefaultTile = tiles[levelTheme.defaultTile]
    levelTime = 0
 
+   gameParticles.clear()
+
    local x, y = 0, 0
    local maxX = 0
    local level = levelData.world
@@ -86,7 +87,7 @@ function loadLevel(id)
          if not levelTiles[x] then levelTiles[x] = {} end
          local tileData = tiles[char] or {}
          if tileData.entity then
-            local sprite = emptyCube:copy(x..'_'..y)
+            local sprite = utils.emptyCube:copy(x..'_'..y)
             entityModel:addChild(sprite)
             table.insert(levelEntities, {
                oldPos = vec(x, y),
@@ -143,13 +144,14 @@ function events.tick()
    if levels[loaded].tick then
       levels[loaded].tick(levelTime)
    end
+   gameParticles.tick()
 end
 
 -- render
 local tilesSprites = {}
 for x = -20, 20 do
    for y = -8, 8 do
-      local sprite = emptyCube:copy(x..'_'..y)
+      local sprite = utils.emptyCube:copy(x..'_'..y)
       sprite:pos(-x * 8, y * -8)
       tilesModel:addChild(sprite)
       table.insert(tilesSprites, {
@@ -225,4 +227,6 @@ function events.world_render(orginalDelta)
    end
    -- level transition
    levelTransition(orginalDelta, camera, scale)
+   -- particles
+   gameParticles.render(delta, cameraFull)
 end

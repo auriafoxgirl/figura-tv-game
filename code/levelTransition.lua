@@ -39,6 +39,7 @@ function setLevel(level, screen)
       return true
    end
 end
+
 function nextLevel()
    if levelTransition < 0 then
       levelTransition = 1

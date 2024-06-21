@@ -95,7 +95,7 @@ do
    local screen = gnui:newContainer():setAnchor(0, 0, 1, 1)
    screens.mainMenu = {screen = screen}
    screen:addChild(
-      createButton('play', vec(128, 18), vec(8, -11),
+      createButton('play', vec(118, 18), vec(8, -11),
       function()
          if progress.getProgress() == 0 then
             setLevel(2)
@@ -105,7 +105,7 @@ do
       end
    ):setAnchor(0, 0.5))
    screen:addChild(
-      createButton('info', vec(128, 18), vec(8, 11),
+      createButton('info', vec(118, 18), vec(8, 11),
       function()
          setUIScreen('info')
       end
