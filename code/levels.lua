@@ -1,4 +1,4 @@
-local tiles = require('tiles')
+local tiles = require('code.tiles')
 
 return {
    {

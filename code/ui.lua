@@ -1,6 +1,6 @@
 local gnui = require("libraries.gnui")
-local levels = require('levels')
-local progress = require('progress')
+local levels = require('code.levels')
+local progress = require('code.progress')
 
 -- variables and stuff
 uiScreen = nil

@@ -1,6 +1,6 @@
 local model = models.model.Hud.levelTransition
-local levels = require('levels')
-local progress = require('progress')
+local levels = require('code.levels')
+local progress = require('code.progress')
 local whitePixel = textures.whitePixel or textures:newTexture('whitePixel', 1, 1):setPixel(0, 0, 1, 1, 1)
 local levelTransition = -1
 local animPos = vec(0, 0)

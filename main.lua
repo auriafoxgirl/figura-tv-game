@@ -1,10 +1,9 @@
 -- libraries and stuff
-local utils = require('utils')
-local tiles = require('tiles')
-local levels = require('levels')
-local levelThemes = require('levelThemes')
-local entities = require('entities')
-local levelTransition = require('levelTransition')
+local tiles = require('code.tiles')
+local levels = require('code.levels')
+local levelThemes = require('code.levelThemes')
+local entities = require('code.entities')
+local levelTransition = require('code.levelTransition')
 local textureAssets = textures.assets
 local tilesetSize = vec(64, 64)
 local textureAssetsSize = textureAssets:getDimensions()

@@ -1,8 +1,8 @@
 local module = {}
 
-local input = require('input')
-local levels = require('levels')
-local tiles = require('tiles')
+local input = require('code.input')
+local levels = require('code.levels')
+local tiles = require('code.tiles')
 
 local jumpBuffer = 0
 local coyoteJump = 0
