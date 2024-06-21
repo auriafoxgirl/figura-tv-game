@@ -5,7 +5,8 @@ local whitePixel = textures.whitePixel or textures:newTexture('whitePixel', 1, 1
 local levelTransition = -1
 local animPos = vec(0, 0)
 local targetLevel = nil
-model:pos(0, 0, -8):color(0, 0, 0)
+local targetUIScreen = nil
+model:pos(0, 0, -16):color(0, 0, 0)
 
 local sprites = {}
 for i = 1, 4 do
@@ -29,10 +30,11 @@ local function getAnimPos()
    end
 end
 
-function setLevel(level)
+function setLevel(level, screen)
    if levelTransition < 0 then
       levelTransition = 1
       targetLevel = level or loaded
+      targetUIScreen = screen
       getAnimPos()
       return true
    end
@@ -52,7 +54,8 @@ function events.tick()
    if levelTransition == 11 then
       loadLevel(targetLevel)
       getAnimPos()
-      setUIScreen()
+      setUIScreen(targetUIScreen)
+      gamePaused = false
    elseif levelTransition > 22 then
       levelTransition = -1
    end

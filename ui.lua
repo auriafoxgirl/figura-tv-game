@@ -8,8 +8,18 @@ local clickedElement = nil
 -- mouse clicking cancelling
 local click = keybinds:newKeybind("screenui", "key.mouse.left")
 click.press = function()
-   if gamePaused then return end
+   if gameHidden then return end
    if host:getScreen() and not host:isChatOpen() and not uiScreen then return end
+   return true
+end
+-- pausing game
+local pause = keybinds:newKeybind('pause game', 'key.keyboard.escape', true)
+pause.press = function()
+   if gameHidden then return end
+   if host:getScreen() then return end
+   if uiScreen then return end
+   gamePaused = not gamePaused
+   setUIScreen(gamePaused and 'pause')
    return true
 end
 
@@ -167,9 +177,27 @@ do
    ):setAnchor(0, 0.5))
 end
 
+do
+   local screen = gnui:newContainer():setAnchor(0, 0, 1, 1)
+   screens.pause = {screen = screen}
+   screen:addChild(
+      createButton('back to game', vec(128, 18), vec(-64, -20),
+      function()
+         gamePaused = false
+         setUIScreen()
+      end
+   ):setAnchor(0.5, 0.5))
+   screen:addChild(
+      createButton('back to main menu', vec(128, 18), vec(-64, 2),
+      function()
+         setLevel(1, 'mainMenu')
+      end
+   ):setAnchor(0.5, 0.5))
+end
+
 -- magic
 local canvas = gnui.createScreenCanvas()
-canvas:setZ(16)
+canvas:setZ(160) -- multiplied by clipping margin (0.05), 8 / 0.05
 
 local currentContainer
 function setUIScreen(menu)
@@ -182,6 +210,8 @@ function setUIScreen(menu)
       currentContainer = screens[menu].screen
       canvas:addChild(currentContainer)
       if screens[menu].func then screens[menu].func() end
+      local mousePos = client:getMousePos() / client:getGuiScale()
+      canvas:setMousePos(mousePos.x, mousePos.y, true)
    else
       uiScreen = nil
    end
@@ -189,17 +219,21 @@ end
 setUIScreen('mainMenu')
 
 events.WORLD_RENDER:register(function()
-   if gamePaused or not uiScreen then
+   if gameHidden or not uiScreen then
       host:setUnlockCursor(false)
       canvas:setVisible(false)
       clickedElement = nil
       return
+   elseif host:getScreen() and not host:isChatOpen() then
+      currentContainer:setCanCaptureCursor(false)
+      return
    end
    host:setUnlockCursor(true)
    canvas:setVisible(true)
+   currentContainer:setCanCaptureCursor(true)
 end)
 
 events.MOUSE_MOVE:register(function()
-   if gamePaused or uiScreen then return end
+   if gameHidden or uiScreen then return end
    return true
 end)

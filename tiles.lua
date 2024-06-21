@@ -1,7 +1,7 @@
 local tiles = {
    [' '] = {uv = vec(0, 0), noCollision = true, light = 0.25}, -- empty
    ['_'] = {uv = vec(0, 0), noCollision = true, light = 1}, -- light
-   ['P'] = {entity = 'player', physics = true, hitbox = vec(7, 7.9)}, -- player
+   ['P'] = {entity = 'player', physics = true, hitbox = vec(6.95, 7.95)}, -- player
    ['T'] = {uv = vec(6, 4), oneWay = true, light = 1}, -- tv
    ['t'] = {uv = vec(7, 0), frames = 8, oneWay = true, light = 1}, -- static tv
    ['f'] = {uv = vec(0, 1)}, -- floor

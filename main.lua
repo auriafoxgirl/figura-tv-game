@@ -13,9 +13,10 @@ time = 0
 
 -- pause game
 gamePaused = false
+gameHidden = false
 keybinds:fromVanilla('figura.config.action_wheel_button').press = function()
-   gamePaused = not gamePaused
-   if gamePaused then
+   gameHidden = not gameHidden
+   if gameHidden then
       local key = keybinds:getVanillaKey('figura.config.action_wheel_button'):gsub('^key%.keyboard%.', '')
       print('press '..key..' to show game')
    end
@@ -132,10 +133,10 @@ loadLevel(1)
 
 -- tick
 function events.tick()
-   if gamePaused then return end
+   if gamePaused or gameHidden then return end
    time = time + 1
-   oldCameraPos = cameraPos:copy()
    levelTime = levelTime + 1
+   oldCameraPos = cameraPos:copy()
    for _, v in pairs(levelEntities) do
       v.oldPos = v.pos:copy()
       entities.tick(v)
@@ -159,14 +160,20 @@ for x = -20, 20 do
    end
 end
 
-function events.world_render(delta)
-   if gamePaused then
+function events.world_render(orginalDelta)
+   if gameHidden then
       renderer:setRenderHUD(true)
       hud:setVisible(false)
       return
    end
    hud:setVisible(true)
-   -- renderer:setRenderHUD(false)
+   renderer:setRenderHUD(false)
+   local gameBrightness = 1
+   local delta = orginalDelta
+   if gamePaused then
+      delta = 0.5
+      gameBrightness = 0.5
+   end
    local windowSize = client.getScaledWindowSize()
    local camera = math.lerp(oldCameraPos, cameraPos, delta)
    camera = camera + (levels[loaded].cameraOffset or vec(0, 0))
@@ -177,9 +184,10 @@ function events.world_render(delta)
    local scale = windowSize.y / (16 * 8) * cameraZoom
    worldModel:setPos(cameraOffset.xy_ * 8 * scale - windowSize.xy_ * 0.5)
    worldModel:setScale(scale)
+   worldModel:setColor(gameBrightness, gameBrightness, gameBrightness)
    -- background
    background:setPrimaryTexture('custom', levelTheme.backgroundTexture or whitePixel, 16, 16)
-   background:color(levelTheme.backgroundColor or vec(1, 1, 1))
+   background:color((levelTheme.backgroundColor or vec(1, 1, 1)) * gameBrightness)
    local bgScale = windowSize.y / 16
    background:setPos(-windowSize.xy_ * 0.5)
    background:setScale(bgScale, bgScale)
@@ -217,5 +225,5 @@ function events.world_render(delta)
       end
    end
    -- level transition
-   levelTransition(delta, camera, scale)
+   levelTransition(orginalDelta, camera, scale)
 end

@@ -151,9 +151,9 @@ fffffff QQOOKK ffff   fff
    theme = 'tv',
    world = [[
     f                                
-    F      k                         
-    F     fff                        
-    F K                              
+    F      k  f                      
+    F     fff F                      
+    F K       F                      
     F KK                             
     F  KK                            
     F   KK                           

@@ -68,7 +68,8 @@ function module.tick(e)
             if collision(e.pos, e.tile.hitbox, ignoreOneWay, e.oldPos) then
                e.pos.y = e.pos.y - e.vel.y
             end
-            end
+         end
+         e.vel.y = 0
          if onGround and isPlayer then
             coyoteJump = 3
          end
@@ -109,6 +110,7 @@ function module.tick(e)
                e.pos.x = e.pos.x - e.vel.x
             end
          end
+         e.vel.x = 0
       end
       local oldMoveTime = e.moveTime
       e.moveTime = e.moveTime + math.abs(e.pos.x - e.oldPos.x)

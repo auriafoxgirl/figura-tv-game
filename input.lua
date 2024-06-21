@@ -6,7 +6,7 @@ local keys = {
 }
 
 for _, v in pairs(keys) do
-   v.press = function() return not gamePaused end
+   v.press = function() return not gameHidden end
 end
 
 return keys
