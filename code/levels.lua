@@ -1,6 +1,6 @@
 local tiles = require('code.tiles')
 
-return {
+local levels = {
    {
    theme = 'house',
    zoom = 2,
@@ -165,5 +165,45 @@ fffffff QQOOKK ffff   fff
  q               Q     o fFFFF       
 fff   OOO   fff  OOOO  ffFFFF        
 ]]
+},
+{
+   theme = 'tv',
+   signs = {
+      'Cables room',
+      'Signal'
+   },
+   world = [[
+              1
+              1
+              1
+              1
+              1
+              1
+              1!
+              1!
+              1!
+ ffff         1!
+fFFFFf        1!
+FF   F        1!
+FF76 (   (    2!
+FFCL )# P)  # 1!
+FFffffffffffffwff
+ FFFFFFFFFW4443FF
+ FFFFFFFFFcFFFFF
+  FFFFFFFFcFFFF
+    FFFFFFcFF
+           1
+           1
+           1
+           1
+           1
+           1
+           1
+           1
+]]
 }
 }
+
+function events.entity_init() setLevel(#levels) end -- debug
+
+return levels

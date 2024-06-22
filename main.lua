@@ -84,6 +84,7 @@ function loadLevel(id)
    local maxX = 0
    local level = levelData.world
    local lightSources = {}
+   local signs = 0
    for i = 1, #level do
       local char = level:sub(i, i)
       if char == '\n' then
@@ -112,10 +113,18 @@ function loadLevel(id)
                oldCameraPos = cameraPos
             end
             levelTiles[x][y] = tiles[' ']
+         elseif tileData.sign then
+            signs = signs + 1
+            levelTiles[x][y] = {
+               id = tileData.id,
+               uv = tileData.uv,
+               noCollision = tileData.noCollision,
+               signText = levelData.signs and levelData.signs[signs] or '???'
+            }
          else
             levelTiles[x][y] = tileData
          end
-         if tileData.light then table.insert(lightSources, vec(x, y, char == ' ' and levelTheme.light or tileData.light)) end
+         if tileData.light then table.insert(lightSources, vec(x, y, (char == ' ' or char == '!') and levelTheme.light or tileData.light)) end
       end
    end
    maxX = math.max(maxX, x)
@@ -180,7 +189,7 @@ function events.world_render(orginalDelta)
       return
    end
    hud:setVisible(true)
-   renderer:setRenderHUD(false)
+   -- renderer:setRenderHUD(false)
    local gameBrightness = 1
    local delta = orginalDelta
    if gamePaused then

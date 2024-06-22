@@ -1,10 +1,13 @@
 local gnui = require("libraries.gnui")
 local levels = require('code.levels')
 local progress = require('code.progress')
+local dialog = require('code.dialog')
 
 -- variables and stuff
 uiScreen = nil
 local clickedElement = nil
+local canvas = gnui.createScreenCanvas()
+canvas:setZ(160) -- multiplied by clipping margin (0.05), 8 / 0.05
 -- mouse clicking cancelling
 local click = keybinds:newKeybind("screenui", "key.mouse.left")
 click.press = function()
@@ -21,6 +24,27 @@ pause.press = function()
    gamePaused = true
    setUIScreen('pause')
    return true
+end
+
+-- dialog
+local dialogScreen = gnui:newContainer()
+canvas:addChild(dialogScreen)
+dialogScreen:setAnchor(0, 0, 1, 0)
+            :setDimensions(4, 4, -4, 48)
+            :setCanCaptureCursor(false)
+            :setVisible(false)
+local dialogLabel = gnui:newLabel()
+dialogScreen:addChild(dialogLabel)
+dialogLabel:setText('')
+           :setFontScale(1.5)
+           :setDimensions(10, 10)
+do
+   local sprite = gnui:newSprite()
+   sprite:setTexture(textures.ui)
+         :setUV(1, 19, 5, 23)
+         :setBorderThickness(2, 2, 2, 2)
+         :setScale(2)
+   dialogScreen:setSprite(sprite)
 end
 
 -- ui screens
@@ -118,6 +142,12 @@ do
          print('press '..key..' to show game')
       end
    ):setAnchor(0, 0.5))
+   local label = gnui:newLabel()
+   screen:addChild(label)
+   label:setText({text = 'Fix the\nTV static!', color = '#000000'})
+        :setCanCaptureCursor(false)
+        :setFontScale(2)
+        :setDimensions(4, 4)
 end
 
 do
@@ -204,9 +234,6 @@ do
 end
 
 -- magic
-local canvas = gnui.createScreenCanvas()
-canvas:setZ(160) -- multiplied by clipping margin (0.05), 8 / 0.05
-
 local currentContainer
 function setUIScreen(menu)
    if currentContainer then
@@ -227,18 +254,36 @@ end
 setUIScreen('mainMenu')
 
 events.WORLD_RENDER:register(function()
-   if gameHidden or not uiScreen then
+   if gameHidden then
       host:setUnlockCursor(false)
-      canvas:setVisible(false)
       clickedElement = nil
+      canvas:setCanCaptureCursor(false)
+      canvas:setVisible(false)
+      return
+   end
+   canvas:setVisible(true)
+
+   if dialog.text ~= '' then
+      dialogScreen:setVisible(true)
+      dialogLabel:setText(dialog.text)
+   else
+      dialogScreen:setVisible(false)
+   end
+
+   if not uiScreen then
+      host:setUnlockCursor(false)
+      clickedElement = nil
+      canvas:setCanCaptureCursor(false)
+      if currentContainer then currentContainer:setVisible(false) end
       return
    elseif host:getScreen() and not host:isChatOpen() then
       currentContainer:setCanCaptureCursor(false)
       return
    end
    host:setUnlockCursor(true)
-   canvas:setVisible(true)
+   canvas:setCanCaptureCursor(true)
    currentContainer:setCanCaptureCursor(true)
+   currentContainer:setVisible(true)
 end)
 
 events.MOUSE_MOVE:register(function()

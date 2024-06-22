@@ -4,6 +4,7 @@ local input = require('code.input')
 local levels = require('code.levels')
 local tiles = require('code.tiles')
 local gameParticles = require('code.particles')
+local dialog = require('code.dialog')
 
 local jumpBuffer = 0
 local coyoteJump = 0
@@ -168,7 +169,6 @@ function module.tick(e)
             end
             if tile.code then tile.code(e) end
             if tile.key then
-               levelTiles[pos.x][pos.y] = tiles[' ']
                for _, tilesX in pairs(levelTiles) do
                   for y, t in pairs(tilesX) do
                      local unlockedId = t.id..' key:'..tile.key
@@ -177,6 +177,12 @@ function module.tick(e)
                      end
                   end
                end
+               if levelTiles[pos.x][pos.y] == tile then
+                  levelTiles[pos.x][pos.y] = tiles[' ']
+               end
+            end
+            if tile.signText then
+               dialog.set(tile.signText, 4)
             end
          end
          -- in void

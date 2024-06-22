@@ -1,6 +1,8 @@
 local tiles = {
    [' '] = {uv = vec(0, 0), noCollision = true, light = 0.25}, -- empty
    ['_'] = {uv = vec(0, 0), noCollision = true, light = 1}, -- light
+   ['#'] = {uv = vec(4, 3), noCollision = true, sign = true}, -- sign
+   ['!'] = {uv = vec(0, 0), light = 0.25}, -- barrier
    ['P'] = {entity = 'player', physics = true, hitbox = vec(6.95, 7.95)}, -- player
    ['T'] = {uv = vec(6, 4), oneWay = true, light = 1}, -- tv
    ['t'] = {uv = vec(7, 0), frames = 8, oneWay = true, light = 1}, -- static tv
@@ -23,8 +25,8 @@ local tiles = {
    [']'] = {uv = vec(0, 4), noCollision = true, code = function() nextLevel() end}, -- warp door2
    ['9'] = {uv = vec(1, 3), light = 1}, -- sky
    ['8'] = {uv = vec(1, 4), light = 1}, -- sky grass
-   ['7'] = {uv = vec(1, 5)}, -- grass
-   ['6'] = {uv = vec(1, 6)}, -- dirt
+   ['7'] = {uv = vec(1, 5), noCollision = true}, -- grass, cable 1
+   ['6'] = {uv = vec(1, 6), noCollision = true}, -- dirt, cable 2
    ['^'] = {uv = vec(5, 0), frames = 8, light = 1, speed = 0.5, damage = true, noCollision = true}, -- cable
 
    ['q'] = {uv = vec(2, 5), light = 1, noCollision = true, key = 1}, -- key yellow
@@ -38,6 +40,9 @@ local tiles = {
    ['o'] = {uv = vec(4, 5), light = 1, noCollision = true, key = 3}, -- key red
    ['O'] = {uv = vec(4, 6), light = 1}, -- key block locked red
    ['O key:3'] = {uv = vec(4, 7), light = 1, noCollision = true}, -- key block unlocked red
+
+   ['L'] = {uv = vec(3, 4), light = 1, noCollision = true, key = 4}, -- cable
+   ['L key:4'] = {uv = vec(4, 4), light = 1, noCollision = true}, -- cable, no blue cable
 }
 
 for id, tile in pairs(tiles) do
