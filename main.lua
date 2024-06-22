@@ -31,6 +31,14 @@ local worldModel = hud.world
 local entityModel = nil
 local tilesModel = hud.world.tiles
 local background = hud.background
+local figuraGuiInfo = models.model.CameraFiguraGuiInfo
+figuraGuiInfo:setPrimaryRenderType('EMISSIVE_SOLID')
+figuraGuiInfo.cube:setScale(2, 2, 2)
+figuraGuiInfo:newText('')
+             :pos(0, -8, -34):scale(0.4)
+             :text('close figura\nmenu to play!')
+             :alignment("CENTER")
+             :outline(true):outlineColor(vectors.hexToRGB('#5d2c28'))
 
 -- level
 loaded = nil
@@ -159,6 +167,10 @@ for x = -20, 20 do
          sprite = sprite
       })
    end
+end
+
+function events.render(_, context)
+   figuraGuiInfo:setVisible(context == 'FIGURA_GUI')
 end
 
 function events.world_render(orginalDelta)
