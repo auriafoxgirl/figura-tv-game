@@ -1,14 +1,78 @@
-local module = {}
+local entities = {}
 
 local input = require('code.input')
 local levels = require('code.levels')
 local tiles = require('code.tiles')
 local gameParticles = require('code.particles')
 local dialog = require('code.dialog')
+local utils = require('code.utils')
+local items = require('code.items')
+
+local worldModel = models.model.Hud.world
+local entityModel = nil
+local itemList = {}
 
 local jumpBuffer = 0
 local coyoteJump = 0
 local jumpTime = 0
+
+function entities.clear()
+   if entityModel then worldModel:removeChild(entityModel) end
+   entityModel = worldModel:newPart('entity'):setPos(0, 0, -1)
+   levelEntities = {}
+   itemList = {}
+end
+
+function entities.add(tileData, pos, id)
+   local id = id or tileData.entity == 'player' and 'player' or #levelEntities + 1
+   if levelEntities[id] then entities.remove(id) end
+   local sprite = utils.emptyCube:copy(id)
+   entityModel:addChild(sprite)
+   levelEntities[id] = {
+      oldPos = pos,
+      pos = pos,
+      depth = 0,
+      vel = vec(0, 0),
+      moveTime = 0,
+      wasOnGround = true,
+      type = tileData.entity,
+      tile = tileData,
+      sprite = sprite,
+      id = id
+   }
+   if tileData.entity == 'player' then
+      cameraPos = pos + 0.5
+      oldCameraPos = cameraPos
+   end
+   return levelEntities[id]
+end
+
+function entities.remove(id)
+   local e = levelEntities[id]
+   if not e then return end
+   entityModel:removeChild(e.sprite)
+   levelEntities[e] = nil
+end
+
+function entities.addItem(id)
+   if itemList[id] then return end
+   local entity = entities.add(
+      {
+         entity = 'item',
+      },
+      vec(0, 0),
+      'item:'..id
+   )
+   entity.itemOffset = items[id].itemOffset / 8
+   entity.uv = items[id].uv
+   entity.depth = items[id].depth
+end
+
+function entities.removeItem(id)
+   if not itemList[id] then return end
+   entities.remove(itemList[id].id)
+   itemList[id] = nil
+end
 
 local function collision(pos, hitbox, ignoreOneWay, oldPos)
    hitbox = hitbox / 8
@@ -36,7 +100,7 @@ local function collision(pos, hitbox, ignoreOneWay, oldPos)
    return false
 end
 
-function module.tick(e)
+function entities.tick(e)
    local isPlayer = e.type == 'player' and not levels[loaded].noInput
    if isPlayer then
       jumpBuffer = math.max(jumpBuffer - 1, 0)
@@ -184,6 +248,7 @@ function module.tick(e)
             if tile.signText then
                dialog.set(tile.signText, 4)
             end
+            if tile.giveItem then entities.addItem(tile.giveItem) end
          end
          -- in void
          if not (pos > levelSafeArea.xy and pos < levelSafeArea.zw) then
@@ -191,9 +256,18 @@ function module.tick(e)
          end
       end
    end
+   if e.type == 'item' then
+      if levelEntities.player then
+         e.pos = levelEntities.player.pos + e.itemOffset
+         e.oldPos = levelEntities.player.oldPos + e.itemOffset
+         e.hide = levelEntities.player.hide
+      else
+         e.hide = true
+      end 
+   end
 end
 
-function module.render(e)
+function entities.render(e)
    if e.hide then return vec(0, 0), false end
    if e.tile.uv then
       return e.tile.uv, false
@@ -204,11 +278,10 @@ function module.render(e)
          uv.y = uv.y + math.floor(e.moveTime * 1.5) % 4
       end
       return uv, e.flip
-   elseif e.type == 'tv' then
-      local uv = vec(7, 0)
-      return uv
+   elseif e.type == 'item' then
+      return e.uv, levelEntities.player and levelEntities.player.flip
    end
    return vec(0, 0), false
 end
 
-return module
+return entities

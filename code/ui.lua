@@ -2,11 +2,13 @@ local gnui = require("libraries.gnui")
 local levels = require('code.levels')
 local progress = require('code.progress')
 local dialog = require('code.dialog')
+local items = require('code.items')
+local accessories = require('code.accessories')
 
 -- variables and stuff
 uiScreen = nil
 local clickedElement = nil
-local canvas = gnui.createScreenCanvas()
+local canvas = gnui.getScreenCanvas()
 canvas:setZ(160) -- multiplied by clipping margin (0.05), 8 / 0.05
 -- mouse clicking cancelling
 local click = keybinds:newKeybind("screenui", "key.mouse.left")
@@ -112,14 +114,14 @@ local function createButton(text, size, pos, func, uvOffset, locked, textAlign, 
       end
       updateButton()
    end)
-   return button
+   return button, label
 end
 
 do
    local screen = gnui:newContainer():setAnchor(0, 0, 1, 1)
    screens.mainMenu = {screen = screen}
    screen:addChild(
-      createButton('play', vec(118, 18), vec(8, -29),
+      createButton('play', vec(118, 18), vec(8, -40),
       function()
          if progress.getProgress() == 0 then
             setLevel(2)
@@ -129,13 +131,19 @@ do
       end
    ):setAnchor(0, 0.5))
    screen:addChild(
-      createButton('info', vec(118, 18), vec(8, -9),
+      createButton('info', vec(118, 18), vec(8, -20),
       function()
          setUIScreen('info')
       end
    ):setAnchor(0, 0.5))
    screen:addChild(
-      createButton('quit game', vec(118, 18), vec(8, 11),
+      createButton('settings', vec(118, 18), vec(8, 0),
+      function()
+         setUIScreen('settings')
+      end
+   ):setAnchor(0, 0.5))
+   screen:addChild(
+      createButton('quit game', vec(118, 18), vec(8, 20),
       function()
          gameHidden = true
          local key = keybinds:getVanillaKey('figura.config.action_wheel_button'):gsub('^key%.keyboard%.', '')
@@ -157,21 +165,21 @@ do
       if levelScreen then screen:removeChild(levelScreen) end
       levelScreen = gnui:newContainer():setAnchor(0, 0.5, 1, 1.5)
       screen:addChild(levelScreen)
-      levelScreen:addChild(
+      levelScreen:addChild((
          createButton('prologue', vec(118, 18), vec(0, 4),
          function()
             setLevel(2)
          end
-      ))
+      )))
       local x, y = 0, 1
       local maxLevel = progress.getProgress()
-      for i = 3, #levels do
+      for i = 3, #levels - 2 do
          if x >= 5 then
             x = 0
             y = y + 1
          end
          local isLocked = i > maxLevel -- change this later
-         levelScreen:addChild(
+         levelScreen:addChild((
             createButton(tostring(i - 2), vec(22, 22), vec(x * 24, y * 24),
             function()
                setLevel(i)
@@ -180,18 +188,71 @@ do
             isLocked, -- locked
             vec(0.5, 0.5),
             isLocked and '#92a1b9' -- text color
-         ))
+         )))
          x = x + 1
       end
-      levelScreen:addChild(
-         createButton('back', vec(118, 18), vec(0, (y + 1) * 24 + 2),
+      local isLocked = #levels - 1 > maxLevel
+      levelScreen:addChild((
+         createButton('signal room', vec(118, 18), vec(0, (y + 1) * 24),
+         function()
+            setLevel(#levels - 1)
+         end,
+         isLocked and vec(0, 12) or vec(0, 0), -- uv
+         isLocked, -- locked
+         vec(0.5, 0.5),
+         isLocked and '#92a1b9' -- text color
+      )))
+      y = y + 1
+      levelScreen:addChild((
+         createButton('back', vec(118, 18), vec(0, (y + 1) * 24 - 2),
          function()
             setUIScreen('mainMenu')
          end
-      ))
+      )))
       levelScreen:setDimensions(vec(8, (y + 1) * -12 - 8).xyxy)
    end
    screens.levels = {screen = screen, func = rebuild}
+end
+
+do
+   local screen = gnui:newContainer():setAnchor(0, 0.5, 1, 1.5)
+   local y = 0
+   local buttons = {}
+   local update
+   for id, v in pairs(items) do
+      if v.accessory then
+         local button, label = createButton(id, vec(118, 18), vec(0, y * 20),
+            function()
+               accessories.setEnabled(id, not accessories.getEnabled(id))
+               update()
+            end
+         )
+         screen:addChild(button)
+         table.insert(buttons, {
+            label = label,
+            name = id,
+         })
+         y = y + 1
+      end
+   end
+   screen:addChild((
+      createButton('back', vec(118, 18), vec(0, y * 20),
+      function()
+         setUIScreen('mainMenu')
+      end
+   )))
+   y = y + 1
+   screen:setDimensions(vec(8, y * -10).xyxy)
+   function update()
+      for _, v in pairs(buttons) do
+         v.label:setText(
+            (accessories.getEnabled(v.name) and 'on ' or 'off')..
+            ' | '..
+            v.name
+         )
+      end
+   end
+   screens.settings = {screen = screen, func = update}
 end
 
 do

@@ -41,8 +41,11 @@ local tiles = {
    ['O'] = {uv = vec(4, 6), light = 1}, -- key block locked red
    ['O key:3'] = {uv = vec(4, 7), light = 1, noCollision = true}, -- key block unlocked red
 
-   ['L'] = {uv = vec(3, 4), light = 1, noCollision = true, key = 4}, -- cable
+   ['L'] = {uv = vec(3, 4), light = 1, noCollision = true, key = 4, giveItem = 'cable'}, -- cable
    ['L key:4'] = {uv = vec(4, 4), light = 1, noCollision = true}, -- cable, no blue cable
+
+   ['2 key:4'] = {uv = vec(4, 1), light = 1, noCollision = true, key = 5, code = function() nextLevel() end}, -- cable broken, fixable
+   ['2 key:4 key:5'] = {uv = vec(3, 1), light = 1, noCollision = true}, -- cable fixed
 }
 
 for id, tile in pairs(tiles) do

@@ -1,7 +1,7 @@
 local tiles = require('code.tiles')
 
 local levels = {
-   {
+{ -- main menu room
    theme = 'house',
    zoom = 2,
    noInput = true,
@@ -27,10 +27,10 @@ local levels = {
 666666666FFFFFFFFFFFFFFFFFFFFFFF
 ]],
    tick = function()
-      levelEntities[1].hide = true
+      levelEntities.player.hide = true
    end
-   },
-{
+},
+{ -- prologue
    theme = 'house',
    zoom = 2,
    noInput = true,
@@ -54,7 +54,7 @@ local levels = {
 666666666FFFFFFFFFFFFFFFFFFFFFFF
 ]],
    tick = function(time)
-      local player = levelEntities[1]
+      local player = levelEntities.player
       if time <= 36 then
          player.vel = vec(0.12, 0)
       elseif time <= 38 then
@@ -96,7 +96,7 @@ local levels = {
          tiles['T'].uv = vec(6, 4 + math.clamp(math.floor((time - 40) * 0.25), 0, 3))
       end
    end
-   },
+},
 {
    theme = 'tv',
    world = [[
@@ -166,7 +166,7 @@ fffffff QQOOKK ffff   fff
 fff   OOO   fff  OOOO  ffFFFF        
 ]]
 },
-{
+{ -- final room
    theme = 'tv',
    signs = {
       'Cables room',
@@ -192,18 +192,70 @@ FFffffffffffffwff
  FFFFFFFFFcFFFFF
   FFFFFFFFcFFFF
     FFFFFFcFF
-           1
-           1
-           1
-           1
-           1
-           1
-           1
-           1
+          1
+          1
+          1
+          1
+          1
+          1
+          1
+          1
 ]]
-}
+},
+{ -- ending animation
+   theme = 'house',
+   zoom = 2,
+   noInput = true,
+   transitionOffset = vec(-2.6, 0.4),
+   world = [[
+999999999wcccccccccwcccccccccccc
+999999999wcccccccccwcccccccccccc
+999999999wcccccccccwcccccccccccc
+999999999wcccccccccwcccccccccccc
+999999999wcccccccccwcccccccccccc
+999999999wcccccccccwcccccccccccc
+999999999wcccccccccwcccccccccccc
+999999999wCCCCCCCCCwCCCCCCCCCCCC
+999999999w         w____________
+999999999w _P_12_5 w____________
+999999999( _T_34__ (____________
+888888888)  d  s   )____________
+777777777fffffffffffffffffffffff
+666666666FFFFFFFFFFFFFFFFFFFFFFF
+666666666FFFFFFFFFFFFFFFFFFFFFFF
+666666666FFFFFFFFFFFFFFFFFFFFFFF
+666666666FFFFFFFFFFFFFFFFFFFFFFF
+]],
+   tick = function(time)
+      tiles['T'].uv = vec(6, 4 + 3)
+      local player = levelEntities.player
+      if time == 1 then
+         player.pos = player.pos - vec(0, 1)
+      end
+      if time < 20 then
+         player.hide = true
+      elseif time < 38 then
+         player.hide = false
+         player.vel.x = 0.22
+         if time == 20 or time == 35 then
+            player.vel.y = 0.5
+         end
+      elseif time > 41 then
+         local y = player.pos.y
+         player.pos.y = math.floor(y) + 0.5
+         if time == 42 then
+            player.vel = vec(-0.02, 0)
+         else
+            player.vel = vec(0, 0)
+         end
+      end
+      if time == 60 then
+         setLevel(1, 'mainMenu')
+      end
+   end
+},
 }
 
-function events.entity_init() setLevel(#levels) end -- debug
+-- function events.entity_init() setLevel(#levels) end -- debug
 
 return levels

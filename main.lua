@@ -6,6 +6,7 @@ local levelThemes = require('code.levelThemes')
 local entities = require('code.entities')
 local utils = require('code.utils')
 local levelTransition = require('code.levelTransition')
+local accessories = require('code.accessories')
 local textureAssets = textures.assets
 local tilesetSize = vec(64, 64)
 local textureAssetsSize = textureAssets:getDimensions()
@@ -28,7 +29,6 @@ end
 local hud = models.model.Hud
 hud:setVisible(false)
 local worldModel = hud.world
-local entityModel = nil
 local tilesModel = hud.world.tiles
 local background = hud.background
 local figuraGuiInfo = models.model.CameraFiguraGuiInfo
@@ -70,9 +70,7 @@ function loadLevel(id)
    levelTheme = levelThemes[levelData.theme] or levelThemes.house
    cameraZoom = levelData.zoom or 1
 
-   if entityModel then worldModel:removeChild(entityModel) end
-   entityModel = worldModel:newPart('entity'):setPos(0, 0, -1)
-   levelEntities = {}
+   entities.clear()
 
    levelTiles = {}
    levelDefaultTile = tiles[levelTheme.defaultTile]
@@ -96,22 +94,7 @@ function loadLevel(id)
          if not levelTiles[x] then levelTiles[x] = {} end
          local tileData = tiles[char] or {}
          if tileData.entity then
-            local sprite = utils.emptyCube:copy(x..'_'..y)
-            entityModel:addChild(sprite)
-            table.insert(levelEntities, {
-               oldPos = vec(x, y),
-               pos = vec(x, y),
-               vel = vec(0, 0),
-               moveTime = 0,
-               wasOnGround = true,
-               type = tileData.entity,
-               tile = tileData,
-               sprite = sprite,
-            })
-            if tileData.entity == 'player' then
-               cameraPos = vec(x, y) + 0.5
-               oldCameraPos = cameraPos
-            end
+            entities.add(tileData, vec(x, y))
             levelTiles[x][y] = tiles[' ']
          elseif tileData.sign then
             signs = signs + 1
@@ -134,6 +117,9 @@ function loadLevel(id)
       maxX + 6,
       4096
    )
+   -- accessories
+   accessories.give()
+   -- light
    if wasLoadedBefore then return end
    levelLight = {}
    for _, lightPos in pairs(lightSources) do
@@ -154,13 +140,24 @@ function events.tick()
    time = time + 1
    levelTime = levelTime + 1
    oldCameraPos = cameraPos:copy()
-   for _, v in pairs(levelEntities) do
+   -- tick player
+   if levelEntities.player then
+      local v = levelEntities.player
       v.oldPos = v.pos:copy()
       entities.tick(v)
    end
+   -- tick level
    if levels[loaded].tick then
       levels[loaded].tick(levelTime)
    end
+   -- tick entities
+   for id, v in pairs(levelEntities) do
+      if id ~= 'player' then
+         v.oldPos = v.pos:copy()
+         entities.tick(v)
+      end
+   end
+   -- tick particles
    gameParticles.tick()
 end
 
@@ -235,7 +232,7 @@ function events.world_render(orginalDelta)
    for _, e in pairs(levelEntities) do
       local uv, flip = entities.render(e)
       local pos = math.lerp(e.oldPos, e.pos, delta)
-      e.sprite:setPos((cameraFull - pos.x_ + pos._y).xy_ * 8)
+      e.sprite:setPos((cameraFull - pos.x_ + pos._y).xy_ * 8 + vec(0, 0, e.depth * 0.1))
       if flip then
          local mat = matrices.mat3()
          mat:scale(-1, 1, 1)
