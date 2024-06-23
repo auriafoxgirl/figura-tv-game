@@ -35,7 +35,7 @@ local figuraGuiInfo = models.model.CameraFiguraGuiInfo
 figuraGuiInfo:setPrimaryRenderType('EMISSIVE_SOLID')
 figuraGuiInfo.cube:setScale(2, 2, 2)
 figuraGuiInfo:newText('')
-             :pos(0, -8, -34):scale(0.4)
+             :pos(0, -10, -34):scale(0.4)
              :text('close figura\nmenu to play!')
              :alignment("CENTER")
              :outline(true):outlineColor(vectors.hexToRGB('#5d2c28'))
