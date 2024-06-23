@@ -272,6 +272,6 @@ end
 }
 }
 
-function events.entity_init() setLevel(#levels - 3) end -- debug
+-- function events.entity_init() setLevel(#levels - 3) end -- debug
 
 return levels
