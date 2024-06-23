@@ -1,6 +1,7 @@
 local tiles = require('code.tiles')
 
-local levels = {
+local levels
+levels = {
 { -- main menu room
    theme = 'house',
    zoom = 2,
@@ -250,12 +251,27 @@ FFffffffffffffwff
          end
       end
       if time == 60 then
-         setLevel(1, 'mainMenu')
+         setLevel(#levels, 'thanksForPlaying')
       end
    end
 },
+{ -- thanks for playing room
+theme = 'void',
+cameraOffset = vec(0, 2),
+transitionOffset = vec(0, 2),
+zoom = 10,
+noInput = true,
+world = [[
+fff
+fPf
+fff
+]],
+tick = function(t)
+   if t == 120 then setLevel(1, 'mainMenu') end
+end
+}
 }
 
--- function events.entity_init() setLevel(#levels) end -- debug
+function events.entity_init() setLevel(#levels - 3) end -- debug
 
 return levels

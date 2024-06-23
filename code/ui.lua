@@ -173,7 +173,7 @@ do
       )))
       local x, y = 0, 1
       local maxLevel = progress.getProgress()
-      for i = 3, #levels - 2 do
+      for i = 3, #levels - 3 do
          if x >= 5 then
             x = 0
             y = y + 1
@@ -292,6 +292,17 @@ do
          setLevel(1, 'mainMenu')
       end
    ):setAnchor(0.5, 0.5))
+end
+
+do
+   local screen = gnui:newContainer():setAnchor(0, 0, 1, 1)
+   screens.thanksForPlaying = {screen = screen}
+   local label = gnui:newLabel()
+   screen:addChild(label)
+   label:setAlign(0.5, 0.5)
+        :setAnchor(0.5, 0.5)
+        :setText('Thanks for\nplaying')
+        :setFontScale(4)
 end
 
 -- magic

@@ -13,4 +13,10 @@ themes.tv = {
    defaultTile = ' ',
 }
 
+themes.void = {
+   defaultTile = 'w',
+   backgroundColor = vec(0, 0, 0),
+   light = 0
+}
+
 return themes

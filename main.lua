@@ -186,7 +186,7 @@ function events.world_render(orginalDelta)
       return
    end
    hud:setVisible(true)
-   -- renderer:setRenderHUD(false)
+   renderer:setRenderHUD(false)
    local gameBrightness = 1
    local delta = orginalDelta
    if gamePaused then
