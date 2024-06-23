@@ -21,8 +21,8 @@ local tiles = {
    ['5'] = {uv = vec(3, 3), noCollision = true}, -- painting
    ['('] = {uv = vec(0, 3), noCollision = true}, -- door1
    [')'] = {uv = vec(0, 4), noCollision = true}, -- door2
-   ['['] = {uv = vec(0, 3), noCollision = true, code = function() nextLevel() end}, -- warp door1
-   [']'] = {uv = vec(0, 4), noCollision = true, code = function() nextLevel() end}, -- warp door2
+   ['['] = {uv = vec(0, 3), noCollision = true, code = function() nextLevel(true) end}, -- warp door1
+   [']'] = {uv = vec(0, 4), noCollision = true, code = function() nextLevel(true) end}, -- warp door2
    ['9'] = {uv = vec(1, 3), light = 1}, -- sky
    ['8'] = {uv = vec(1, 4), light = 1}, -- sky grass
    ['7'] = {uv = vec(1, 5), noCollision = true}, -- grass, cable 1

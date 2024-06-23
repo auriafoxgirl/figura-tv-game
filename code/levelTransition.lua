@@ -40,12 +40,15 @@ function setLevel(level, screen)
    end
 end
 
-function nextLevel()
+function nextLevel(playSound)
    if levelTransition < 0 then
       levelTransition = 1
       targetLevel = math.min(loaded + 1, #levels)
       progress.updateProgress(targetLevel)
       getAnimPos()
+      if playSound then
+         sounds['minecraft:block.wooden_door.open']:pos(player:getPos()):play()
+      end
    end
 end
 
