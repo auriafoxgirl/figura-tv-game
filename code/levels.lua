@@ -167,6 +167,37 @@ fffffff QQOOKK ffff   fff
 fff   OOO   fff  OOOO  ffFFFF        
 ]]
 },
+{
+   theme = 'tv',
+   world = [[
+                                              
+     K                                        
+     K                                        
+  q  K  o                                     
+ fff^^^fff                                    
+ FFFfffFFF   fOOOf           (         [      
+  FFFFFFF^^^^FfkfF   QQQ   P )         ]      
+    FFF      FFfFF^^^f f^^^ffff       fff     
+             FFFFF   F F    FFF^^^^^^^FFFf    
+              FFF    F                   Ff   
+                     F                      f 
+                     F                     fF 
+                     Fff   ffff   ffff   ffF  
+                                              
+]]
+},
+{
+   theme = 'tv',
+   world = [[
+                            
+                      K     
+                  (   K  [  
+   k   o  o q  q  )P  K  ]  
+ fffff OOOO QQQQ ffff K fff 
+  FFF             FF        
+                            
+]]
+},
 { -- final room
    theme = 'tv',
    signs = {
@@ -269,9 +300,10 @@ fff
 tick = function(t)
    if t == 120 then setLevel(1, 'mainMenu') end
 end
-}
+},
 }
 
 -- function events.entity_init() setLevel(#levels - 3) end -- debug
+-- function events.entity_init() setLevel(#levels - 4) end -- debug
 
 return levels
