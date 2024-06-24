@@ -191,11 +191,11 @@ do
          )))
          x = x + 1
       end
-      local isLocked = #levels - 1 > maxLevel
+      local isLocked = #levels - 2 > maxLevel
       levelScreen:addChild((
          createButton('signal room', vec(118, 18), vec(0, (y + 1) * 24),
          function()
-            setLevel(#levels - 1)
+            setLevel(#levels - 2)
          end,
          isLocked and vec(0, 12) or vec(0, 0), -- uv
          isLocked, -- locked

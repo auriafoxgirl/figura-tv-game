@@ -198,6 +198,34 @@ fff   OOO   fff  OOOO  ffFFFF
                             
 ]]
 },
+{
+   theme = 'tv',
+   world = [[
+                                              
+         f            OOOfff   ff    fffff    
+         F         ffOOO        Ff   F   Ff   
+         F k   ffff                 O       f 
+         FKKKffF                   OO      fF 
+         F                        OO      fFF 
+     KO  F                    ff^^fff^^^^fFFF 
+     KO             ffffff^^^fF     FffffFFF  
+     KO            fF                FFFFFFF  
+     KO           fF                  FFFFFF  
+  [  KO  (       fF                    FFFF   
+  ]  KO  )P    f                       FFFF   
+ fff KO fffOOOfFf                      FFFF   
+        FFFfo   Fffff  KKff  KKfff     FFF    
+        FFFFf       F^^^^^^^^^^^FFf    FFF    
+         FFFFf                   FFf   FFF    
+         FFFFFf                        FF     
+          FFFFFf                       FF     
+            FFFFf                      FF     
+                   Kff                 F      
+                         ffK       ffKKF      
+                              fff   F^^F      
+                                              
+]]
+},
 { -- final room
    theme = 'tv',
    signs = {
@@ -304,6 +332,5 @@ end
 }
 
 -- function events.entity_init() setLevel(#levels - 3) end -- debug
--- function events.entity_init() setLevel(#levels - 4) end -- debug
 
 return levels

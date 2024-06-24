@@ -3,7 +3,7 @@ local tiles = {
    ['_'] = {uv = vec(0, 0), noCollision = true, light = 1}, -- light
    ['#'] = {uv = vec(4, 3), noCollision = true, sign = true}, -- sign
    ['!'] = {uv = vec(0, 0), light = 0.25}, -- barrier
-   ['P'] = {entity = 'player', physics = true, hitbox = vec(6.95, 7.95)}, -- player
+   ['P'] = {entity = 'player', physics = true, hitbox = vec(6.95, 6.95)}, -- player
    ['T'] = {uv = vec(6, 4), oneWay = true, light = 1}, -- tv
    ['t'] = {uv = vec(7, 0), frames = 8, oneWay = true, light = 1}, -- static tv
    ['f'] = {uv = vec(0, 1)}, -- floor
