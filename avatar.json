@@ -1,6 +1,7 @@
 {
-   "name": "fix the tv static!",
+   "name": "Fix the tv static!",
    "description": "game about tv static for avatar contest",
+   "color": "#9ed2eb",
    "authors": [
       "Auriafoxgirl"
    ]

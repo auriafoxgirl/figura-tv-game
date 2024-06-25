@@ -1,0 +1,1 @@
+files in assets/ are not used in game itself
