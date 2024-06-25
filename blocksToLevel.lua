@@ -41,19 +41,26 @@ local tiles = {
    ['minecraft:lapis_block'] = 'K',
    ['minecraft:pink_glazed_terracotta'] = 'P',
    ['minecraft:end_rod'] = '^',
+   ['minecraft:slime_block'] = '+',
+   ['minecraft:stone_bricks'] = 'F',
 }
+local fullTiles = {
+   ['F'] = true,
+   ['+'] = true,
+}
+
 local function getTile(pos, blocks)
    local block = blocks[tostring(pos)]
    if not block then return end
-   if tiles[block.id] then
-      return tiles[block.id]
-   elseif block.id == 'minecraft:stone_bricks' then
+   if block.id == 'minecraft:stone_bricks' then
       local block2 = blocks[tostring(pos + vec(0, 1))]
-      if block2 and block2.id == 'minecraft:stone_bricks' then
+      if fullTiles[tiles[block2 and block2.id]] then
          return 'F'
       else
          return 'f'
       end
+   elseif tiles[block.id] then
+      return tiles[block.id]
    elseif block.id == 'minecraft:iron_door' or block.id == 'minecraft:cherry_door' then
       local top = block.properties and block.properties.half == 'upper'
       if block.id == 'minecraft:cherry_door' then

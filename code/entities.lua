@@ -180,6 +180,7 @@ function entities.tick(e)
       end
       e.wasOnGround = onGround
       -- left right
+      local tileBelow = onGround and levelTiles[math.floor(e.pos.x + 0.5)] and levelTiles[math.floor(e.pos.x + 0.5)][math.floor(e.pos.y - 0.5)] or {}
       if isPlayer then
          local dir = (input.right:isPressed() and 1 or 0) - (input.left:isPressed() and 1 or 0)
          dir = dir * 0.25
@@ -251,6 +252,9 @@ function entities.tick(e)
             end
             if tile.giveItem then entities.addItem(tile.giveItem) end
             if tile.removeItem then entities.removeItem(tile.removeItem) end
+         end
+         if tileBelow then
+            if tileBelow.jump then e.vel.y = tileBelow.jump end
          end
          -- in void
          if not (pos > levelSafeArea.xy and pos < levelSafeArea.zw) then

@@ -226,6 +226,104 @@ fff   OOO   fff  OOOO  ffFFFF
                                               
 ]]
 },
+{
+   theme = 'tv',
+   world = [[
+              
+          [   
+          ]   
+        fffff 
+        FFFFF 
+  (     FFFFF 
+  )P    FFFF  
+ ffffff+FFFF  
+ FFFFFFFFFFF  
+  FFFFFFFFF   
+  FFFFFF      
+              
+]]
+},
+{
+   theme = 'tv',
+   world = [[
+                     
+               [     
+               ]     
+              ffff   
+                     
+                     
+                     
+                 f+f 
+                     
+                     
+                     
+  (          ff+     
+  )P                 
+ ffff  ff+           
+  FF                 
+                     
+]]
+},
+{
+   theme = 'tv',
+   world = [[
+                           
+     f^^^^^^^^^^^^^^^f     
+                           
+   (                   [   
+   )P                  ]   
+ ffffff+fff+fff+fff+ffffff 
+                           
+]]
+},
+{
+   theme = 'tv',
+   world = [[
+                
+          q     
+                
+                
+    Q       f+f 
+    Q       FFF 
+  [ Q (     FFF 
+  ] Q )P    FFF 
+ fffffffff+fFFF 
+ FFFFFFFFFFFFFF 
+   FFFFFFFFFFF  
+      FFFFFFFF  
+      FFFFF     
+                
+]]
+},
+{
+   theme = 'tv',
+   world = [[
+                                
+   fff                     [    
+ ffFFF       k   k o   o   ]    
+ FFFFF fffff KKKKK OOOOO fffff  
+ FFFFF FFFFF^^^^^^^^^^^^^FFFFFf 
+  FFFF                       FF 
+  FFFF                       FF 
+  FFFF+                      FF 
+  FFFFFff   f+f   f+f   fff  FF 
+  FFFFFFF^^^FFF^^^FFF^^^FFF  FF 
+   FFFFF                 FF+ FF 
+                           Q F  
+                           Q F  
+    q                      Q F  
+  fffffQ  QffQ  QffQ  Qfff  +F  
+   FFFF^^^^FF^^^^FF^^^^FFF  FF  
+                        FF+ FF  
+                            F   
+    (                       F   
+    )P                      F   
+  ffffff   ffff   ffff   ff+F   
+  FFFFFF    FF     FF     FFF   
+   FFFF                         
+                                
+]]
+},
 { -- final room
    theme = 'tv',
    signs = {
@@ -326,7 +424,7 @@ fPf
 fff
 ]],
 tick = function(t)
-   if t == 120 then setLevel(1, 'mainMenu') end
+   if t == 100 then setLevel(1, 'mainMenu') end
 end
 },
 }

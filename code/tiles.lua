@@ -8,6 +8,7 @@ local tiles = {
    ['t'] = {uv = vec(7, 0), frames = 8, oneWay = true, light = 1}, -- static tv
    ['f'] = {uv = vec(0, 1)}, -- floor
    ['F'] = {uv = vec(0, 2)}, -- floor2
+   ['+'] = {uv = vec(4, 0), jump = 1.2}, -- jump pad
    ['d'] = {uv = vec(1, 1), oneWay = true}, -- drawer
    ['s'] = {uv = vec(1, 2), noCollision = true}, -- sofa
    ['1'] = {uv = vec(3, 1), noCollision = true, light = 1}, -- window 1, lamp
