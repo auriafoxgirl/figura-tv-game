@@ -66,6 +66,7 @@ function entities.addItem(id)
    entity.itemOffset = items[id].itemOffset / 8
    entity.uv = items[id].uv
    entity.depth = items[id].depth
+   itemList[id] = entity
 end
 
 function entities.removeItem(id)
@@ -249,6 +250,7 @@ function entities.tick(e)
                dialog.set(tile.signText, 4)
             end
             if tile.giveItem then entities.addItem(tile.giveItem) end
+            if tile.removeItem then entities.removeItem(tile.removeItem) end
          end
          -- in void
          if not (pos > levelSafeArea.xy and pos < levelSafeArea.zw) then
