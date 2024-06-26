@@ -28,7 +28,7 @@ local tiles = {
    ['8'] = {uv = vec(1, 4), light = 1}, -- sky grass
    ['7'] = {uv = vec(1, 5), noCollision = true}, -- grass, cable 1
    ['6'] = {uv = vec(1, 6), noCollision = true}, -- dirt, cable 2
-   ['^'] = {uv = vec(5, 0), frames = 8, light = 1, speed = 0.5, damage = true, noCollision = true}, -- cable
+   ['^'] = {uv = vec(5, 0), frames = 8, light = 1, speed = 0.5, damage = true, noCollision = true}, -- zapper
 
    ['q'] = {uv = vec(2, 5), light = 1, noCollision = true, key = 1}, -- key yellow
    ['Q'] = {uv = vec(2, 6), light = 1}, -- key block locked yellow

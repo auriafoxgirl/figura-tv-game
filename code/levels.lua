@@ -202,6 +202,7 @@ fff   OOO   fff  OOOO  ffFFFF
 },
 {
    theme = 'tv',
+   noAirLight = true,
    world = [[
                                               
          f            OOOfff   ff    fffff    
@@ -301,30 +302,20 @@ fff   OOO   fff  OOOO  ffFFFF
 {
    theme = 'tv',
    world = [[
-                                
-   fff                     [    
- ffFFF       k   k o   o   ]    
- FFFFF fffff KKKKK OOOOO fffff  
- FFFFF FFFFF^^^^^^^^^^^^^FFFFFf 
-  FFFF                       FF 
-  FFFF                       FF 
-  FFFF+                      FF 
-  FFFFFff   f+f   f+f   fff  FF 
-  FFFFFFF^^^FFF^^^FFF^^^FFF  FF 
-   FFFFF                 FF+ FF 
-                           Q F  
-                           Q F  
-    q                      Q F  
-  fffffQ  QffQ  QffQ  Qfff  +F  
-   FFFF^^^^FF^^^^FF^^^^FFF  FF  
-                        FF+ FF  
-                            F   
-    (                       F   
-    )P                      F   
-  ffffff   ffff   ffff   ff+F   
-  FFFFFF    FF     FF     FFF   
-   FFFF                         
-                                
+                             
+     Q                       
+     Q             O         
+  [  Q   (         O         
+  ]  Q  P)         O         
+ fff Q fffff    ff O         
+ FFF^^^^FFF        Q ddd     
+                   Q         
+                   Q  q   ff 
+             f+ff  Q fffffFF 
+     o   fff FFFF    FFFFFF  
+   fffff FFF                 
+    FFF  FFF                 
+                             
 ]]
 },
 {
@@ -355,7 +346,43 @@ fff   OOO   fff  OOOO  ffFFFF
                        
 ]]
 },
-{ -- final room
+{
+   theme = 'tv',
+   noAirLight = true,
+   world = [[
+                                    
+         f                          
+        fF  o                       
+       fFF  ff  fff                 
+      fFF             fff        f  
+     fFF                    ff   Ff 
+     FFF                         FF 
+     FFF                         FF 
+     FFF           k     o       FF 
+     FFF   fffff KKKKK OOOOO ff+fFF 
+     FFF  fFFFFF^^^^^^^^^^^^^FFFFFF 
+     FFF                         FF 
+     FFF                         FF 
+    fFFF                         FF 
+    FFFF+ffff  ff+ff  ff+ff  ff  FF 
+   fFFFFFFFFF  FFFFF  FFFFF  FF  FF 
+  fFFFFFFFF                   F+ FF 
+      O                        Q F  
+   [  O                        Q F  
+   ]  O q                      Q F  
+ ffffffffffQ  QffQ  QffQ  Qfffdd+F  
+  FFFFFFFFF^^^^FF^^^^FF^^^^FFF  FF  
+                            FF+ FF  
+                                F   
+        (                       F   
+        )P                      F   
+      ffffff   ffff   ffff   ff+F   
+      FFFFFF    FF     FF     FFF   
+       FFFF                         
+                                    
+]]
+},
+{ -- cable room
    theme = 'tv',
    signs = {
       'Cables room',

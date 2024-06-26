@@ -43,6 +43,7 @@ local tiles = {
    ['minecraft:end_rod'] = '^',
    ['minecraft:slime_block'] = '+',
    ['minecraft:stone_bricks'] = 'F',
+   ['minecraft:spruce_slab'] = 'd',
 }
 local fullTiles = {
    ['F'] = true,
@@ -83,7 +84,7 @@ local function find()
    local count = 1
    local min = vec(0, 00)
    local max = vec(0, 0)
-   for _ = 1, 10 do
+   for _ = 1, 20 do
       local newBlocksToCheck = {}
       for _, p in pairs(blocksToCheck) do
          for _, dir in pairs(dirs) do
@@ -106,7 +107,7 @@ local function find()
          end
       end
       blocksToCheck = newBlocksToCheck
-      if count > 256 then break end
+      if count > 2048 then print('too many tiles') break end
    end
    for _, b in pairs(blocks) do
       box(b:getPos())

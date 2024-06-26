@@ -314,7 +314,7 @@ do
    screen:addChild(label)
    label:setAlign(0.5, 0.5)
         :setAnchor(0.5, 0.5)
-        :setText('Thanks for\nplaying')
+        :setText('Thanks for\nplaying! <3')
         :setFontScale(4)
 end
 

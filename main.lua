@@ -53,6 +53,7 @@ levelSafeArea = vec(0, 0, 0, 0)
 levelTheme = nil
 local cameraZoom = 1
 local levelTime = 0
+local minimumLight = 0
 
 local lightOffsets = {}
 for x = -8, 8 do
@@ -78,6 +79,8 @@ function loadLevel(id)
    levelTime = 0
 
    gameParticles.clear()
+
+   minimumLight = levelData.noAirLight and levelTheme.light or 0
 
    local x, y = 0, 0
    local maxX = 0
@@ -108,7 +111,9 @@ function loadLevel(id)
          else
             levelTiles[x][y] = tileData
          end
-         if tileData.light then table.insert(lightSources, vec(x, y, (char == ' ' or char == '!') and levelTheme.light or tileData.light)) end
+         if tileData.light and not (char == ' ' and levelData.noAirLight) then
+            table.insert(lightSources, vec(x, y, (char == ' ' or char == '!') and levelTheme.light or tileData.light))
+         end
       end
    end
    maxX = math.max(maxX, x)
@@ -124,11 +129,10 @@ function loadLevel(id)
    if wasLoadedBefore then return end
    levelLight = {}
    for _, lightPos in pairs(lightSources) do
-      -- local lPos, s = lightPos.xy, 
       for pos, l in pairs(lightOffsets) do
          local p = lightPos.xy + pos
          if not levelLight[p.x] then levelLight[p.x] = {} end
-         levelLight[p.x][p.y] = math.max(levelLight[p.x][p.y] or 0, l * lightPos.z)
+         levelLight[p.x][p.y] = math.max(levelLight[p.x][p.y] or minimumLight, l * lightPos.z)
       end
    end
 end
@@ -228,7 +232,7 @@ function events.world_render(orginalDelta)
          uv = uv + vec(0, math.max(math.floor(time * speed + pos.x, 0) % (tile.frames + delay) - delay, 0))
       end
       sprite.sprite:setUVPixels(uv * 8 + uvOffset)
-      local l = levelLight[pos.x] and levelLight[pos.x][-pos.y] or 0
+      local l = levelLight[pos.x] and levelLight[pos.x][-pos.y] or minimumLight
       sprite.sprite:setColor(l, l, l)
    end
    -- entities
