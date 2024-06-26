@@ -4,6 +4,7 @@ local levels
 levels = {
 { -- main menu room
    theme = 'house',
+   speedrun = 'stop',
    zoom = 2,
    noInput = true,
    cameraOffset = vec(-2, 7/8),
@@ -99,6 +100,7 @@ levels = {
    end
 },
 {
+   speedrun = 'start',
    theme = 'tv',
    world = [[
                      
@@ -246,22 +248,23 @@ fff   OOO   fff  OOOO  ffFFFF
 {
    theme = 'tv',
    world = [[
-                     
-               [     
-               ]     
-              ffff   
-                     
-                     
-                     
-                 f+f 
-                     
-                     
-                     
-  (          ff+     
-  )P                 
- ffff  ff+           
-  FF                 
-                     
+                        
+                [       
+                ]       
+              ffff      
+                        
+                        
+                        
+                  f+fff 
+                   FFF  
+                        
+                        
+   (          ff+ff     
+   )P         FFFFF     
+ fffff  ff+ff  FFF      
+ FFFFF   FFF            
+  FFF                   
+                        
 ]]
 },
 {
@@ -324,6 +327,34 @@ fff   OOO   fff  OOOO  ffFFFF
                                 
 ]]
 },
+{
+   theme = 'tv',
+   world = [[
+                       
+ fffffffffffffffffffff 
+ F   Q       F       F 
+ F [ Q       F o     F 
+ F ] Q       F       F 
+ Fffff   ffffFffff   F 
+ F   F       F       F 
+ F   F       F       F 
+ F   F       F       F 
+ F   Ff+ff   F   ff+fF 
+ F           F       F 
+ F           F       F 
+ F           F       F 
+ F   ffffff+fFf+ffKKKF 
+ F   F       O   F   F 
+ F   F k     O q F   F 
+ F   F       O   F   F 
+ F  +Fffff   ffffF  +F 
+ F                   F 
+ F     (             F 
+ F     )P            F 
+ Ff+fffffff+fffffff+fF 
+                       
+]]
+},
 { -- final room
    theme = 'tv',
    signs = {
@@ -364,6 +395,7 @@ FFffffffffffffwff
    theme = 'house',
    zoom = 2,
    noInput = true,
+   speedrun = 'end',
    transitionOffset = vec(-2.6, 0.4),
    world = [[
 999999999wcccccccccwcccccccccccc

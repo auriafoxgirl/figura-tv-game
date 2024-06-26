@@ -4,6 +4,7 @@ local progress = require('code.progress')
 local dialog = require('code.dialog')
 local items = require('code.items')
 local accessories = require('code.accessories')
+local speedrun = require('code.speedrun')
 
 -- variables and stuff
 uiScreen = nil
@@ -203,8 +204,20 @@ do
          isLocked and '#92a1b9' -- text color
       )))
       y = y + 1
+      isLocked = #levels - 1 > maxLevel
       levelScreen:addChild((
-         createButton('back', vec(118, 18), vec(0, (y + 1) * 24 - 2),
+         createButton('speedrun\n'..(speedrun.getTime() or 'no time'), vec(118, 24), vec(0, (y + 1) * 24 - 4),
+         function()
+            speedrun.startSpeedrun()
+         end,
+         isLocked and vec(0, 12) or vec(0, 0), -- uv
+         isLocked, -- locked
+         vec(0.5, 0.1),
+         isLocked and '#92a1b9' -- text color
+      )))
+      y = y + 1
+      levelScreen:addChild((
+         createButton('back', vec(118, 18), vec(0, (y + 1) * 24),
          function()
             setUIScreen('mainMenu')
          end

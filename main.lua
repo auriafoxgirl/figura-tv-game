@@ -7,6 +7,7 @@ local entities = require('code.entities')
 local utils = require('code.utils')
 local levelTransition = require('code.levelTransition')
 local accessories = require('code.accessories')
+local speedrun = require('code.speedrun')
 local textureAssets = textures.assets
 local tilesetSize = vec(64, 64)
 local textureAssetsSize = textureAssets:getDimensions()
@@ -140,6 +141,8 @@ function events.tick()
    time = time + 1
    levelTime = levelTime + 1
    oldCameraPos = cameraPos:copy()
+   -- speedrun mode
+   speedrun.tick()
    -- tick player
    if levelEntities.player then
       local v = levelEntities.player
